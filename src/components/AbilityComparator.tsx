@@ -100,21 +100,18 @@ export function AbilityComparator({ playerA, reportA, playerB, reportB, dataType
                return (
                 <TableRow key={row.name} className="border-zinc-800 hover:bg-zinc-900/50">
                   <TableCell className="font-medium text-zinc-200">{row.name}</TableCell>
-                  
                   <TableCell className="text-right font-mono text-blue-300 bg-blue-950/10 border-l border-zinc-800">
                     {castsA || '-'}
                   </TableCell>
                   <TableCell className="text-right font-mono text-blue-300 bg-blue-950/10">
                     {row.skillA?.total ? (row.skillA.total / 1000000).toFixed(2) + 'M' : '-'}
                   </TableCell>
-
                   <TableCell className="text-right font-mono text-orange-300 bg-orange-950/10 border-l border-zinc-800">
                     {castsB || '-'}
                   </TableCell>
                   <TableCell className="text-right font-mono text-orange-300 bg-orange-950/10">
                     {row.skillB?.total ? (row.skillB.total / 1000000).toFixed(2) + 'M' : '-'}
                   </TableCell>
-
                   <TableCell className={`text-right font-bold border-l border-zinc-800 ${diffCasts > 0 ? 'text-green-500' : diffCasts < 0 ? 'text-red-500' : 'text-zinc-600'}`}>
                     {diffCasts !== 0 ? (diffCasts > 0 ? `+${diffCasts}` : diffCasts) : '-'}
                   </TableCell>
