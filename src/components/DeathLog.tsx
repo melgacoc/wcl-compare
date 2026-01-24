@@ -6,7 +6,7 @@ import { LiveFightSelector } from './LiveFightSelector';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Skull, Clock, ShieldAlert, Search, PlayCircle, Activity } from 'lucide-react';
+import { Skull, Clock, ShieldAlert, Search, Activity } from 'lucide-react';
 
 interface DeathEntry {
   name: string;
@@ -36,6 +36,32 @@ interface TimelineEvent {
   absorbed?: number;
 }
 
+interface ReportData {
+  report: {
+    table?: {
+      data?: {
+        entries?: any[];
+      };
+    };
+    fights?: { startTime: number }[];
+    events?: { data?: CastEvent[] };
+    damageTaken?: { data?: any[] };
+    healingReceived?: { data?: any[] };
+  };
+}
+
+interface DeathsQueryData {
+  reportData?: ReportData;
+}
+
+interface CastsQueryData {
+  reportData?: ReportData;
+}
+
+interface TimelineQueryData {
+  reportData?: ReportData;
+}
+
 export function DeathLog() {
   const [url, setUrl] = useState('');
   const [report, setReport] = useState({ code: '', fightId: 0 });
@@ -48,9 +74,9 @@ export function DeathLog() {
   const [defensiveResult, setDefensiveResult] = useState<{spell: DefensiveSpell, status: 'AVAILABLE' | 'ON_COOLDOWN' | 'ACTIVE'}[]>([]);
   const [timelineResult, setTimelineResult] = useState<TimelineEvent[]>([]);
 
-  const [getDeaths, { data: deathData, loading: loadingDeaths }] = useLazyQuery(GET_DEATHS);
-  const [getCasts] = useLazyQuery(GET_PLAYER_CASTS);
-  const [getTimeline] = useLazyQuery(GET_DEATH_TIMELINE);
+  const [getDeaths, { data: deathData, loading: loadingDeaths }] = useLazyQuery<DeathsQueryData>(GET_DEATHS);
+  const [getCasts] = useLazyQuery<CastsQueryData>(GET_PLAYER_CASTS);
+  const [getTimeline] = useLazyQuery<TimelineQueryData>(GET_DEATH_TIMELINE);
 
   const parseUrl = (val: string) => {
     setUrl(val);
