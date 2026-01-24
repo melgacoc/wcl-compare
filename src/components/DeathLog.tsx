@@ -127,66 +127,66 @@ export function DeathLog() {
     let newDefensiveResult: any[] = [];
 
     if (possibleDefensives.length > 0) {
-        const { data: castData } = await getCasts({ 
-            variables: { code: report.code, fightId: report.fightId, playerId: player.id } 
-        });
-        const casts: CastEvent[] = castData?.reportData?.report?.events?.data || [];
-        
-        newDefensiveResult = possibleDefensives.map(spell => {
-            const uses = casts.filter(c => c.abilityGameID === spell.id);
-            const deathTimestampAbs = player.timestamp;
-            const castsBeforeDeath = uses.filter(c => c.timestamp < deathTimestampAbs);
-            const lastCast = castsBeforeDeath[castsBeforeDeath.length - 1];
+      const { data: castDataRaw } = await getCasts({ 
+        variables: { code: report.code, fightId: report.fightId, playerId: player.id } 
+      });
+      const castData = (castDataRaw || {}) as { reportData?: any };
+      const casts: CastEvent[] = castData?.reportData?.report?.events?.data || [];
+      newDefensiveResult = possibleDefensives.map(spell => {
+        const uses = casts.filter(c => c.abilityGameID === spell.id);
+        const deathTimestampAbs = player.timestamp;
+        const castsBeforeDeath = uses.filter(c => c.timestamp < deathTimestampAbs);
+        const lastCast = castsBeforeDeath[castsBeforeDeath.length - 1];
 
-            let status: 'AVAILABLE' | 'ON_COOLDOWN' | 'ACTIVE' = 'AVAILABLE';
-            if (lastCast) {
-                const timeDiff = deathTimestampAbs - lastCast.timestamp; 
-                if (timeDiff <= (spell.duration * 1000)) status = 'ACTIVE';
-                else if (timeDiff < (spell.cooldown * 1000)) status = 'ON_COOLDOWN';
-            }
-            return { spell, status };
-        });
+        let status: 'AVAILABLE' | 'ON_COOLDOWN' | 'ACTIVE' = 'AVAILABLE';
+        if (lastCast) {
+          const timeDiff = deathTimestampAbs - lastCast.timestamp; 
+          if (timeDiff <= (spell.duration * 1000)) status = 'ACTIVE';
+          else if (timeDiff < (spell.cooldown * 1000)) status = 'ON_COOLDOWN';
+        }
+        return { spell, status };
+      });
     }
 
     // 2. CONSTRUIR TIMELINE (7s antes + 200ms depois pra garantir o kill)
     const endTime = player.timestamp + 200; 
     const startTime = player.timestamp - 7000;
 
-    const { data: timelineData } = await getTimeline({
-        variables: { 
-            code: report.code, 
-            fightId: report.fightId, 
-            playerId: player.id, 
-            startTime, 
-            endTime 
-        }
+    const { data: timelineDataRaw } = await getTimeline({
+      variables: { 
+        code: report.code, 
+        fightId: report.fightId, 
+        playerId: player.id, 
+        startTime, 
+        endTime 
+      }
     });
-
+    const timelineData = (timelineDataRaw || {}) as { reportData?: any };
     const damageEvents = timelineData?.reportData?.report?.damageTaken?.data || [];
     const healingEvents = timelineData?.reportData?.report?.healingReceived?.data || [];
 
     const formattedTimeline: TimelineEvent[] = [
-        ...damageEvents.map((e: any) => ({
-            timestamp: e.timestamp,
-            type: 'damage' as const,
-            // Proteção contra valores nulos
-            amount: (e.amount || 0) + (e.absorbed || 0),
-            abilityName: e.ability?.name || 'Melee',
-            abilityIcon: e.ability?.abilityIcon || 'ability_meleedamage.jpg',
-            sourceName: 'Inimigo',
-            overkill: e.overkill,
-            mitigated: e.mitigated,
-            absorbed: e.absorbed
-        })),
-        ...healingEvents.map((e: any) => ({
-            timestamp: e.timestamp,
-            type: 'healing' as const,
-            amount: e.amount || 0,
-            abilityName: e.ability?.name || 'Heal',
-            abilityIcon: e.ability?.abilityIcon || 'spell_holy_flashheal.jpg',
-            sourceName: 'Healer',
-            absorbed: e.absorbed
-        }))
+      ...damageEvents.map((e: any) => ({
+        timestamp: e.timestamp,
+        type: 'damage' as const,
+        // Proteção contra valores nulos
+        amount: (e.amount || 0) + (e.absorbed || 0),
+        abilityName: e.ability?.name || 'Melee',
+        abilityIcon: e.ability?.abilityIcon || 'ability_meleedamage.jpg',
+        sourceName: 'Inimigo',
+        overkill: e.overkill,
+        mitigated: e.mitigated,
+        absorbed: e.absorbed
+      })),
+      ...healingEvents.map((e: any) => ({
+        timestamp: e.timestamp,
+        type: 'healing' as const,
+        amount: e.amount || 0,
+        abilityName: e.ability?.name || 'Heal',
+        abilityIcon: e.ability?.abilityIcon || 'spell_holy_flashheal.jpg',
+        sourceName: 'Healer',
+        absorbed: e.absorbed
+      }))
     ];
 
     formattedTimeline.sort((a, b) => a.timestamp - b.timestamp);
@@ -195,7 +195,7 @@ export function DeathLog() {
     setTimelineResult(formattedTimeline);
     setResultOwnerId(player.id);
     setAnalyzingId(null);
-  };
+    };
 
   const processDeaths = (): DeathEntry[] => {
     if (!deathData?.reportData?.report?.table?.data?.entries) return [];

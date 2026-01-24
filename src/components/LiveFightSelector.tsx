@@ -9,8 +9,16 @@ interface LiveFightSelectorProps {
   onSelect: (fightId: number) => void;
 }
 
+interface ReportFightsQueryData {
+  reportData?: {
+    report?: {
+      fights?: any[];
+    };
+  };
+}
+
 export function LiveFightSelector({ reportCode, selectedFightId, onSelect }: LiveFightSelectorProps) {
-  const { data, loading, error, startPolling, stopPolling } = useQuery(GET_REPORT_FIGHTS, {
+  const { data, loading, error, startPolling, stopPolling } = useQuery<ReportFightsQueryData>(GET_REPORT_FIGHTS, {
     variables: { code: reportCode },
     pollInterval: 40000, 
     notifyOnNetworkStatusChange: true,
