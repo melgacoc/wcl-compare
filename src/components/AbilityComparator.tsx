@@ -3,6 +3,10 @@ import { GET_PLAYER_DETAILS } from '@/lib/queries';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Zap } from 'lucide-react';
+import { useSpellTooltip } from '@/hooks/useSpellTooltip';
+import { SpellIcon } from '@/components/SpellIcon';
+import { SpellTooltip } from '@/components/SpellTooltip';
+import { useState, useEffect } from 'react';
 
 interface AbilityComparatorProps {
   playerA: { id: number; name: string; spec: string };
@@ -17,6 +21,7 @@ interface AbilityData {
   total: number;
   uses: number;
   icon: string;
+  guid?: number;
 }
 
 interface PlayerDetailsResponse {
@@ -31,7 +36,20 @@ interface PlayerDetailsResponse {
   };
 }
 
+const fetchIconName = async (spellId: number): Promise<string> => {
+  try {
+    const response = await fetch(`https://nether.wowhead.com/tooltip/spell/${spellId}?dataEnv=1&locale=8`);
+    const data = await response.json();
+    return data.icon || 'inv_misc_questionmark';
+  } catch (error) {
+    return 'inv_misc_questionmark';
+  }
+};
+
 export function AbilityComparator({ playerA, reportA, playerB, reportB, dataType }: AbilityComparatorProps) {
+  const { tooltip, showTooltip, hideTooltip } = useSpellTooltip();
+  const [iconCache, setIconCache] = useState<Map<number, string>>(new Map());
+  
   const { data: dataA, loading: loadA } = useQuery<PlayerDetailsResponse>(GET_PLAYER_DETAILS, {
     variables: { code: reportA.code, fightId: reportA.fightId, playerId: playerA.id, dataType }
   });
@@ -40,10 +58,32 @@ export function AbilityComparator({ playerA, reportA, playerB, reportB, dataType
     variables: { code: reportB.code, fightId: reportB.fightId, playerId: playerB.id, dataType }
   });
 
-  if (loadA || loadB) return <div className="p-8 text-center text-muted-foreground animate-pulse">Carregando detalhes das habilidades...</div>;
-
   const entriesA: AbilityData[] = dataA?.reportData?.report?.table?.data?.entries || [];
   const entriesB: AbilityData[] = dataB?.reportData?.report?.table?.data?.entries || [];
+
+  useEffect(() => {
+    const loadIcons = async () => {
+      const allEntries = [...entriesA, ...entriesB];
+      const uniqueSpells = new Map<number, boolean>();
+      
+      for (const entry of allEntries) {
+        if (entry.guid && !iconCache.has(entry.guid) && !uniqueSpells.has(entry.guid)) {
+          uniqueSpells.set(entry.guid, true);
+        }
+      }
+
+      for (const [spellId] of uniqueSpells) {
+        const iconName = await fetchIconName(spellId);
+        setIconCache(prev => new Map(prev).set(spellId, iconName));
+      }
+    };
+
+    if (entriesA.length > 0 || entriesB.length > 0) {
+      loadIcons();
+    }
+  }, [dataA, dataB]);
+
+  if (loadA || loadB) return <div className="p-8 text-center text-muted-foreground animate-pulse">Carregando detalhes das habilidades...</div>;
 
   const allAbilities = Array.from(new Set([
     ...entriesA.map(e => e.name),
@@ -83,6 +123,7 @@ export function AbilityComparator({ playerA, reportA, playerB, reportB, dataType
         <Table>
           <TableHeader className="bg-zinc-900">
             <TableRow className="border-zinc-800 hover:bg-zinc-900">
+              <TableHead className="text-zinc-300 w-[50px]"></TableHead>
               <TableHead className="text-zinc-300 w-[200px]">Habilidade</TableHead>
               <TableHead className="text-right text-blue-500 font-bold bg-blue-950/20 border-l border-zinc-800">Casts (A)</TableHead>
               <TableHead className="text-right text-blue-500 font-bold bg-blue-950/20">Total (A)</TableHead>
@@ -97,8 +138,24 @@ export function AbilityComparator({ playerA, reportA, playerB, reportB, dataType
                const castsB = row.skillB?.uses || 0;
                const diffCasts = castsB - castsA;
 
+               const spellId = row.skillA?.guid || row.skillB?.guid || 0;
+               const icon = spellId > 0 && iconCache.has(spellId) 
+                 ? iconCache.get(spellId)! 
+                 : 'inv_misc_questionmark';
+               
                return (
                 <TableRow key={row.name} className="border-zinc-800 hover:bg-zinc-900/50">
+                  <TableCell className="py-2">
+                    {spellId > 0 && (
+                      <SpellIcon 
+                        spellId={spellId} 
+                        icon={icon} 
+                        size="sm"
+                        onMouseEnter={showTooltip}
+                        onMouseLeave={hideTooltip}
+                      />
+                    )}
+                  </TableCell>
                   <TableCell className="font-medium text-zinc-200">{row.name}</TableCell>
                   <TableCell className="text-right font-mono text-blue-300 bg-blue-950/10 border-l border-zinc-800">
                     {castsA || '-'}
@@ -121,6 +178,7 @@ export function AbilityComparator({ playerA, reportA, playerB, reportB, dataType
           </TableBody>
         </Table>
       </CardContent>
+      {tooltip && <SpellTooltip {...tooltip} />}
     </Card>
   );
 }

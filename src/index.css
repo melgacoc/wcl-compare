@@ -57,3 +57,42 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Wowhead Tooltip Styles */
+.wowhead-tooltip table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.wowhead-tooltip td, .wowhead-tooltip th {
+  padding: 4px;
+}
+
+.wowhead-tooltip .whtt-name {
+  color: #ffd100;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.wowhead-tooltip .q0 {
+  color: #9d9d9d;
+  font-size: 11px;
+}
+
+.wowhead-tooltip .q {
+  color: #ffd100;
+}
+
+.wowhead-tooltip .q2 {
+  color: #1eff00;
+}
+
+.wowhead-tooltip .q9 {
+  color: #ff8000;
+}
+
+.wowhead-tooltip .wowhead-tooltip-requirements {
+  color: #ffd100;
+  font-size: 11px;
+  font-style: italic;
+}

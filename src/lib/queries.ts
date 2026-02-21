@@ -71,10 +71,36 @@ export const GET_DEATH_TIMELINE = gql`
   query GetDeathTimeline($code: String!, $fightId: Int!, $playerId: Int!, $startTime: Float!, $endTime: Float!) {
     reportData {
       report(code: $code) {
-        damageTaken: events(fightIDs: [$fightId], dataType: DamageDone, targetID: $playerId, startTime: $startTime, endTime: $endTime, limit: 1000) {
+        masterData(translate: true) {
+          abilities {
+            gameID
+            name
+            icon
+          }
+          actors {
+            id
+            name
+            type
+          }
+        }
+        damageTaken: events(
+          fightIDs: [$fightId], 
+          dataType: DamageTaken, 
+          sourceID: $playerId, 
+          startTime: $startTime, 
+          endTime: $endTime, 
+          limit: 1000
+        ) {
           data
         }
-        healingReceived: events(fightIDs: [$fightId], dataType: Healing, targetID: $playerId, startTime: $startTime, endTime: $endTime, limit: 1000) {
+        healingReceived: events(
+          fightIDs: [$fightId], 
+          dataType: Healing, 
+          targetID: $playerId, 
+          startTime: $startTime, 
+          endTime: $endTime, 
+          limit: 1000
+        ) {
           data
         }
       }
