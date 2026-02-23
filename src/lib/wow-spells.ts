@@ -13,7 +13,7 @@ export const DEFENSIVE_SPELLS: Record<string, SpecSpells> = {
     "All": [
       { id: 6262, name: "Healthstone", cooldown: 60, duration: 0, icon: "warlock_healthstone" },
       { id: 385898, name: "Soulburn: Healthstone", cooldown: 60, duration: 0, icon: "warlock_healthstone" },
-      { id: 431973, name: "Health Potion", cooldown: 300, duration: 0, icon: "inv_alchemy_potion_01" }
+      { id: 1238009, name: "Health Potion", cooldown: 300, duration: 0, icon: "inv_alchemy_potion_01" }
     ]
   },
   "DeathKnight": {
