@@ -38,6 +38,7 @@ interface GeneratedData {
   spells: Record<string, SpellInfo>;
   defensives: DefensiveDef[];
   consumables: ConsumableDef[];
+  aliases?: number[][];
 }
 
 const DATA = generated as unknown as GeneratedData;
@@ -194,12 +195,55 @@ export function resolveDefensives(
   return result;
 }
 
-/** IDs de cast de todos os defensivos de uma classe/spec (para o Note Timer Checker). */
-export function defensiveCastIds(className: string, specId: number | undefined): number[] {
-  if (!specId) return [];
+/** IDs de cast dos defensivos de uma classe/spec, opcionalmente só de certas categorias. */
+export function defensiveCastIds(
+  className: string,
+  specId: number | undefined,
+  categories?: DefensiveDef['category'][],
+): number[] {
+  // Sem spec conhecida, vale a classe inteira (melhor aceitar um cast a mais do que perder um uso).
   return DATA.defensives
-    .filter((d) => d.className === className && d.specs.includes(specId))
+    .filter((d) => d.className === className && (!specId || d.specs.includes(specId)) && (!categories || categories.includes(d.category)))
     .flatMap((d) => d.options.map((o) => o.spell));
+}
+
+/** Todos os IDs de cast de defensivos pessoais de qualquer classe (para montar o filtro da API). */
+export function allPersonalDefensiveIds(): number[] {
+  return [...new Set(DATA.defensives.filter((d) => d.category === 'personal').flatMap((d) => d.options.map((o) => o.spell)))];
+}
+
+/** Classes/specs que podem usar a spell como defensivo conhecido (vazio = spell fora da lista). */
+export function classesWithSpell(spellId: number): { className: string; specs: number[] }[] {
+  const group = new Set(castGroup(spellId));
+  return DATA.defensives
+    .filter((d) => d.options.some((o) => group.has(o.spell)))
+    .map((d) => ({ className: d.className, specs: d.specs }));
+}
+
+/** Todos os IDs de cast que contam como a mesma habilidade de `spellId` (variantes por talento/spec). */
+export function castGroup(spellId: number): number[] {
+  const ids = new Set<number>([spellId]);
+  for (const d of DATA.defensives) {
+    if (d.options.some((o) => o.spell === spellId)) d.options.forEach((o) => ids.add(o.spell));
+  }
+  for (const c of DATA.consumables) {
+    if (c.potions.some((p) => p.spell === spellId)) {
+      // poções: cada item é uma habilidade distinta, mas tudo que é "poção de vida" compartilha o CD
+      c.potions.forEach((p) => ids.add(p.spell));
+    }
+  }
+  for (const g of DATA.aliases ?? []) if (g.includes(spellId)) g.forEach((id) => ids.add(id));
+  return [...ids];
+}
+
+/** 'health-potion' | 'healthstone' se o spell é um consumível conhecido. */
+export function consumableKind(spellId: number): string | undefined {
+  return DATA.consumables.find((c) => c.potions.some((p) => p.spell === spellId))?.key;
+}
+
+export function knownSpell(spellId: number): { name: string; icon: string } | undefined {
+  const s = DATA.spells[String(spellId)];
+  return s ? { name: s.name, icon: s.icon } : undefined;
 }
 
 // ----------------------------------------------------------------------------- estado na hora da morte

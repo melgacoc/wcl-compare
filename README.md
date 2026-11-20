@@ -51,3 +51,22 @@ pela cura bruta do evento (efetiva + overheal + absorvida) comparada com a cura 
 item na Wowhead. Bônus de cura aumentam o valor, então uma qualidade menor com bônus pode
 parecer a maior: nesses casos a estrela aparece como "estimado". No Midnight os itens
 craftados têm 2 qualidades; os itens de cada poção ficam em `CONSUMABLES` no config.
+
+## Note Timer Checker
+
+Cole a nota de raid (formato MRT/ExRT) na aba **Note Timer Checker**. O parser
+(`src/lib/noteTimers.ts`) extrai só o que é timer:
+
+- `time:…;tag:Jogador;spellid:…` — habilidade que o jogador deve usar naquele momento;
+- `tag:everyone;spellid:<poção>` — todos devem usar (poção de vida, healthstone);
+- `tag:everyone;text:Cd pessoal!` — todos devem usar ALGUM defensivo pessoal da sua classe/spec.
+
+Tudo o mais (posições, ordem de mecânicas, `assign:`, `invitelist`, blocos de texto) é descartado.
+Cada cast só "paga" um timer, então a mesma spell em 1:00 e 4:00 é verificada separadamente.
+Para cada timer a tela mostra a faixa da margem (± segundos, ajustável), o ponto exato da nota e,
+se foi usado dentro da margem, onde caiu; fora da margem só informa quando foi usado.
+
+Para ficar leve, é feita **uma** consulta ao WCL com `filterExpression` contendo apenas os IDs de spell
+que a nota exige (variantes por talento incluídas), para todos os jogadores de uma vez; só entram
+defensivos/poções se a nota pedir. Detalhe da API: `startTime` sem `endTime` retorna 0 eventos, então
+sempre se envia os dois.

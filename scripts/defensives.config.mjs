@@ -122,6 +122,22 @@ export const DEFENSIVES = {
   ],
 };
 
+// Grupos de IDs de cast que são a MESMA habilidade para efeito de nota de raid
+// (a nota usa um ID, o log pode registrar outro conforme spec/talento). Defensivos
+// da lista acima já agrupam suas próprias variantes; aqui entram as demais.
+export const CAST_ALIASES = [
+  [106898, 77761, 77764],        // Stampeding Roar
+  [115310, 388615],              // Revival / Restoral (talento troca)
+  [114050, 114051, 114052],      // Ascendance (Elemental / Enhancement / Restoration)
+  [110959, 110960],              // Greater Invisibility
+  [342245, 342247],              // Alter Time
+  [212641, 86659],               // Guardian of Ancient Kings
+  [633, 471195],                 // Lay on Hands
+  [360995, 361195],              // Verdant Embrace
+  [102558, 102560, 102543, 102558], // Incarnations (Guardian / Balance / Feral)
+  [6262, 452930, 385898],        // Healthstone / Demonic Healthstone / Soulburn
+];
+
 // Consumíveis disponíveis para qualquer classe.
 // `items` lista os itens (uma entrada por qualidade/estrela). O gerador lê a cura
 // de cada item na Wowhead e ordena: a menor cura é a qualidade 1. No Midnight os

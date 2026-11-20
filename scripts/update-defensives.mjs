@@ -10,7 +10,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { DEFENSIVES, CONSUMABLES } from './defensives.config.mjs';
+import { DEFENSIVES, CONSUMABLES, CAST_ALIASES } from './defensives.config.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = path.join(ROOT, 'src/data/defensives.generated.json');
@@ -245,6 +245,7 @@ const output = {
   spells: usedSpells,
   defensives,
   consumables,
+  aliases: CAST_ALIASES.map((g) => [...new Set(g)]),
 };
 await fs.mkdir(path.dirname(OUT), { recursive: true });
 await fs.writeFile(OUT, JSON.stringify(output, null, 1) + '\n');

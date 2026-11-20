@@ -69,6 +69,46 @@ export const GET_PLAYER_DEFENSIVE_CONTEXT = gql`
   }
 `;
 
+// Note Timer Checker: dados leves da luta (tempos, fases, elenco com classe/spec e mortes).
+export const GET_NOTE_TIMER_FIGHT = gql`
+  query GetNoteTimerFight($code: String!, $fightId: Int!) {
+    reportData {
+      report(code: $code) {
+        fights(fightIDs: [$fightId]) {
+          startTime
+          endTime
+          phaseTransitions { id startTime }
+        }
+        playerDetails(fightIDs: [$fightId])
+        deaths: table(fightIDs: [$fightId], dataType: Deaths)
+      }
+    }
+  }
+`;
+
+// Só os casts que a note exige (filterExpression por ability.id), de todos os jogadores de uma vez.
+// Paginado por nextPageTimestamp.
+export const GET_NOTE_TIMER_CASTS = gql`
+  query GetNoteTimerCasts($code: String!, $fightId: Int!, $filter: String!, $startTime: Float!, $endTime: Float!) {
+    reportData {
+      report(code: $code) {
+        events(
+          fightIDs: [$fightId],
+          dataType: Casts,
+          hostilityType: Friendlies,
+          filterExpression: $filter,
+          startTime: $startTime,
+          endTime: $endTime,
+          limit: 10000
+        ) {
+          data
+          nextPageTimestamp
+        }
+      }
+    }
+  }
+`;
+
 export const GET_REPORT_FIGHTS = gql`
   query GetReportFights($code: String!) {
     reportData {

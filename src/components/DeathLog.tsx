@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { useLazyQuery } from '@apollo/client/react';
 import { GET_DEATHS, GET_PLAYER_DEFENSIVE_CONTEXT, GET_DEATH_TIMELINE } from '@/lib/queries';
 import {
-  resolveDefensives, statusAt, consumablesAt, parseTalents, getSpecId, defensiveCastIds,
-  consumableSpellIds, allConsumableSpellIds, spellName, DEFENSIVES_BUILD,
+  resolveDefensives, statusAt, consumablesAt, parseTalents, getSpecId,
+  allConsumableSpellIds, DEFENSIVES_BUILD,
   type CastEvent, type HealEvent, type DefensiveAtDeath, type ConsumableAtDeath, type DefensiveStatus,
 } from '@/lib/defensives';
 import { LiveFightSelector } from './LiveFightSelector';
@@ -11,10 +11,11 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Skull, Clock, ShieldAlert, Search, Activity, Plus, X } from 'lucide-react';
+import { Skull, Clock, ShieldAlert, Search, Activity } from 'lucide-react';
 import { useSpellTooltip } from '@/hooks/useSpellTooltip';
 import { SpellIcon } from './SpellIcon';
 import { SpellTooltip } from './SpellTooltip';
+import { NoteTimerChecker } from './NoteTimerChecker';
 
 interface DeathEntry {
   name: string;
@@ -52,8 +53,6 @@ interface DefensiveContextData {
 }
 
 const HEAL_FILTER = `ability.id IN (${allConsumableSpellIds().join(',')})`;
-const POTION_IDS = consumableSpellIds('health-potion');
-const HEALTHSTONE_IDS = consumableSpellIds('healthstone');
 
 const formatSeconds = (s: number) => (s >= 60 ? `${Math.floor(s / 60)}m${String(Math.round(s % 60)).padStart(2, '0')}s` : `${Math.ceil(s)}s`);
 
@@ -91,20 +90,6 @@ interface TimelineQueryData {
   reportData?: ReportData;
 }
 
-interface TimerValidationResult {
-  playerName: string;
-  playerId: number;
-  className: string;
-  specName: string;
-  timers: {
-    time: number;
-    type: string;
-    used: boolean;
-    actualCast?: { timestamp: number; abilityName: string };
-    diedInWindow?: boolean;
-    deathTime?: number;
-  }[];
-}
 
 const fetchIconName = async (spellId: number): Promise<string> => {
   try {
@@ -219,11 +204,6 @@ export function DeathLog() {
   const [defensiveResult, setDefensiveResult] = useState<DefensiveAnalysis>(EMPTY_ANALYSIS);
   const [timelineResult, setTimelineResult] = useState<TimelineEvent[]>([]);
   
-  const [timerInput, setTimerInput] = useState('');
-  const [abilityType, setAbilityType] = useState('health-pot');
-  const [timers, setTimers] = useState<{ time: number, type: string }[]>([]);
-  const [timerResults, setTimerResults] = useState<TimerValidationResult[]>([]);
-  const [validatingTimers, setValidatingTimers] = useState(false);
   const [iconCache, setIconCache] = useState<Map<number, string>>(new Map());
 
   const { tooltip, showTooltip, hideTooltip } = useSpellTooltip();
@@ -263,152 +243,6 @@ export function DeathLog() {
       loadIcons();
     }
   }, [timelineResult]);
-
-  const TIMER_TOLERANCE = 10000;
-
-  const parseTimeInput = (input: string): number | null => {
-    if (!input.trim()) return null;
-    if (input.includes(':')) {
-      const parts = input.split(':');
-      if (parts.length === 2) {
-        const minutes = parseInt(parts[0], 10);
-        const seconds = parseInt(parts[1], 10);
-        if (!isNaN(minutes) && !isNaN(seconds)) {
-          return (minutes * 60 + seconds) * 1000;
-        }
-      }
-    } else {
-      const seconds = parseInt(input, 10);
-      if (!isNaN(seconds)) {
-        return seconds * 1000;
-      }
-    }
-    return null;
-  };
-
-  const addTimer = () => {
-    const timeMs = parseTimeInput(timerInput);
-    if (timeMs === null) {
-      alert('Formato de tempo inválido. Use MM:SS ou segundos.');
-      return;
-    }
-    setTimers([...timers, { time: timeMs, type: abilityType }]);
-    setTimerInput('');
-  };
-
-  const removeTimer = (index: number) => {
-    setTimers(timers.filter((_, i) => i !== index));
-  };
-
-  const getAbilityIdsForType = (type: string): number[] => {
-    switch (type) {
-      case 'health-pot':
-        return POTION_IDS;
-      case 'warlock-stone':
-        return HEALTHSTONE_IDS;
-      default:
-        return [];
-    }
-  };
-
-  const validateTimers = async () => {
-    if (!report.code || !report.fightId) {
-      alert('Selecione um report e fight primeiro.');
-      return;
-    }
-    if (timers.length === 0) {
-      alert('Adicione pelo menos um timer.');
-      return;
-    }
-
-    setValidatingTimers(true);
-    setTimerResults([]);
-
-    try {
-      const players = deathData?.reportData?.report?.table?.data?.entries || [];
-      if (players.length === 0) {
-        alert('Nenhum jogador encontrado. Busque as mortes primeiro.');
-        setValidatingTimers(false);
-        return;
-      }
-
-      const fightStartTime = deathData?.reportData?.report?.fights?.[0]?.startTime || 0;
-      const results: TimerValidationResult[] = [];
-
-      for (const player of players) {
-        const { casts, combatant } = await loadPlayerContext(player.id);
-
-        const className = player.type;
-        const iconParts = player.icon.split('-');
-        const specName = iconParts.length > 1 ? iconParts[1] : className;
-        const specId = combatant?.specID ?? getSpecId(className, specName);
-        const playerDeathTime = player.timestamp;
-
-        const playerResult: TimerValidationResult = {
-          playerName: player.name,
-          playerId: player.id,
-          className: className,
-          specName: specName,
-          timers: []
-        };
-
-        for (const timer of timers) {
-          const targetTimestamp = fightStartTime + timer.time;
-          const abilityIds = getAbilityIdsForType(timer.type);
-          
-          const diedInWindow = playerDeathTime && Math.abs(playerDeathTime - targetTimestamp) <= TIMER_TOLERANCE;
-          
-          if (timer.type === 'defensives') {
-            // Inclui todas as variantes por talento (ex.: Ice Cold conta como Ice Block).
-            const defensiveIds = defensiveCastIds(className, specId);
-
-            const matchingCast = casts.find(c =>
-              defensiveIds.includes(c.abilityGameID) &&
-              Math.abs(c.timestamp - targetTimestamp) <= TIMER_TOLERANCE
-            );
-
-            playerResult.timers.push({
-              time: timer.time,
-              type: timer.type,
-              used: !!matchingCast,
-              actualCast: matchingCast ? {
-                timestamp: matchingCast.timestamp,
-                abilityName: spellName(matchingCast.abilityGameID) || `Spell ${matchingCast.abilityGameID}`
-              } : undefined,
-              diedInWindow: diedInWindow,
-              deathTime: diedInWindow ? playerDeathTime : undefined
-            });
-          } else {
-            const matchingCast = casts.find(c => 
-              abilityIds.includes(c.abilityGameID) &&
-              Math.abs(c.timestamp - targetTimestamp) <= TIMER_TOLERANCE
-            );
-            
-            playerResult.timers.push({
-              time: timer.time,
-              type: timer.type,
-              used: !!matchingCast,
-              actualCast: matchingCast ? {
-                timestamp: matchingCast.timestamp,
-                abilityName: spellName(matchingCast.abilityGameID) || `Spell ${matchingCast.abilityGameID}`
-              } : undefined,
-              diedInWindow: diedInWindow,
-              deathTime: diedInWindow ? playerDeathTime : undefined
-            });
-          }
-        }
-
-        results.push(playerResult);
-      }
-
-      setTimerResults(results);
-    } catch (error) {
-      console.error('Erro ao validar timers:', error);
-      alert('Erro ao validar timers.');
-    } finally {
-      setValidatingTimers(false);
-    }
-  };
 
   const parseUrl = (val: string) => {
     setUrl(val);
@@ -762,167 +596,7 @@ export function DeathLog() {
         </TabsContent>
 
         <TabsContent value="note-timer" className="space-y-6">
-          <Card className="bg-zinc-900 border-zinc-800">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-blue-500">
-                <Clock /> Note Timer Checker
-              </CardTitle>
-              <p className="text-sm text-zinc-400 mt-2">
-                Valida se os jogadores usaram habilidades específicas nos tempos indicados nas notas de raid. A tolerância é de ±{TIMER_TOLERANCE / 1000} segundos.
-              </p>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="md:col-span-1">
-                  <label className="text-xs text-zinc-400 mb-2 block">Tempo (MM:SS ou segundos)</label>
-                  <Input 
-                    className="bg-zinc-950 border-zinc-700 text-zinc-100" 
-                    placeholder="1:30 ou 90" 
-                    value={timerInput}
-                    onChange={e => setTimerInput(e.target.value)}
-                    onKeyDown={e => e.key === 'Enter' && addTimer()}
-                  />
-                </div>
-                <div className="md:col-span-1">
-                  <label className="text-xs text-zinc-400 mb-2 block">Tipo de Habilidade</label>
-                  <select 
-                    className="w-full h-10 px-3 bg-zinc-950 border border-zinc-700 text-zinc-100 rounded-md text-sm"
-                    value={abilityType}
-                    onChange={e => setAbilityType(e.target.value)}
-                  >
-                    <option value="health-pot">Health Potion</option>
-                    <option value="warlock-stone">Warlock Healthstone</option>
-                    <option value="defensives">Defensivos</option>
-                    <option value="other">Outro</option>
-                  </select>
-                </div>
-                <div className="md:col-span-1 flex items-end">
-                  <Button 
-                    onClick={addTimer}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                  >
-                    <Plus className="mr-2" size={16} /> Adicionar Timer
-                  </Button>
-                </div>
-              </div>
-
-              {timers.length > 0 && (
-                <div className="space-y-2">
-                  <h3 className="text-sm font-bold text-zinc-300">Timers Adicionados</h3>
-                  <div className="space-y-2">
-                    {timers.map((timer, idx) => (
-                      <div key={idx} className="flex items-center justify-between p-3 bg-zinc-950 border border-zinc-700 rounded">
-                        <div className="flex items-center gap-4">
-                          <span className="font-mono text-sm text-blue-400">{formatTime(timer.time)}</span>
-                          <span className="text-xs text-zinc-400">
-                            {timer.type === 'health-pot' && 'Health Potion'}
-                            {timer.type === 'warlock-stone' && 'Warlock Healthstone'}
-                            {timer.type === 'defensives' && 'Defensivos'}
-                            {timer.type === 'other' && 'Outro'}
-                          </span>
-                        </div>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => removeTimer(idx)}
-                          className="text-red-400 hover:text-red-300 hover:bg-red-950/30"
-                        >
-                          <X size={16} />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {timers.length === 0 && (
-                <div className="text-center p-8 text-zinc-600 text-sm bg-zinc-950/30 rounded border border-zinc-800">
-                  Nenhum timer adicionado. Use o formulário acima para adicionar timers da nota de raid.
-                </div>
-              )}
-
-              {timers.length > 0 && (
-                <div className="pt-4 border-t border-zinc-800">
-                  <Button 
-                    onClick={validateTimers}
-                    disabled={validatingTimers || !report.code || !report.fightId}
-                    className="w-full bg-green-600 hover:bg-green-700 text-white"
-                  >
-                    {validatingTimers ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                        Validando...
-                      </>
-                    ) : (
-                      <>
-                        <Search className="mr-2" size={16} /> Validar Timers
-                      </>
-                    )}
-                  </Button>
-                </div>
-              )}
-
-              {timerResults.length > 0 && (
-                <div className="space-y-4 pt-6 border-t border-zinc-800">
-                  <h3 className="text-lg font-bold text-zinc-200">Resultados da Validação</h3>
-                  <div className="space-y-3">
-                    {timerResults.map((playerResult, idx) => (
-                      <Card key={idx} className="bg-zinc-950 border-zinc-700">
-                        <CardHeader className="pb-3">
-                          <div className="flex items-center gap-3">
-                            <CardTitle className="text-base text-zinc-100">{playerResult.playerName}</CardTitle>
-                            <span className="text-xs font-semibold text-zinc-500 bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">
-                              {playerResult.specName} {playerResult.className}
-                            </span>
-                          </div>
-                        </CardHeader>
-                        <CardContent className="space-y-2">
-                          {playerResult.timers.map((timer, timerIdx) => (
-                            <div key={timerIdx} className={`p-3 rounded border ${timer.used ? 'bg-green-950/20 border-green-500/30' : 'bg-red-950/20 border-red-500/30'}`}>
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                  <span className="font-mono text-sm font-bold text-zinc-200">
-                                    {formatTime(timer.time)}
-                                  </span>
-                                  <span className="text-xs text-zinc-400">
-                                    {timer.type === 'health-pot' && 'Health Potion'}
-                                    {timer.type === 'warlock-stone' && 'Warlock Healthstone'}
-                                    {timer.type === 'defensives' && 'Defensivos'}
-                                    {timer.type === 'other' && 'Outro'}
-                                  </span>
-                                </div>
-                                <div className="flex flex-col items-end gap-1">
-                                  {timer.used ? (
-                                    <>
-                                      <span className="text-xs font-bold text-green-400">USADO</span>
-                                      {timer.actualCast && (
-                                        <span className="text-xs text-zinc-400">
-                                          ({timer.actualCast.abilityName} em {formatTime(timer.actualCast.timestamp - (deathData?.reportData?.report?.fights?.[0]?.startTime || 0))})
-                                        </span>
-                                      )}
-                                    </>
-                                  ) : (
-                                    <>
-                                      <span className="text-xs font-bold text-red-400">NÃO USADO</span>
-                                      {timer.diedInWindow && timer.deathTime && (
-                                        <span className="text-xs text-orange-400 flex items-center gap-1">
-                                          <Skull size={12} /> Morreu em {formatTime(timer.deathTime - (deathData?.reportData?.report?.fights?.[0]?.startTime || 0))}
-                                        </span>
-                                      )}
-                                    </>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+          <NoteTimerChecker code={report.code} fightId={report.fightId} />
         </TabsContent>
       </Tabs>
 
