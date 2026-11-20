@@ -122,6 +122,51 @@ export const DEFENSIVES = {
   ],
 };
 
+// =============================================================================
+// Interrupts por classe (usado pelo "kick assign" do Note Timer Checker).
+//
+//   spell  ID do CAST (o que o jogador aperta). Define nome/ícone/CD.
+//   ids    TODOS os IDs que aparecem no log para esse interrupt: o do cast e os do
+//          efeito (ex.: Skull Bash casta 106839 mas o evento "interrupt" vem como 93985;
+//          Silence 15487 -> 220543; Solar Beam 78675 -> 97547).
+//   pet    true se quem executa é o pet (Spell Lock / Axe Toss): o evento vem com o id do
+//          pet, ligado ao dono por `friendlyPets.petOwner`.
+//   incidental  true = habilidade de dano que só ÀS VEZES interrompe (Avenger's Shield): só conta
+//          quando gerou um evento de interrupt; um cast sem interrupt NÃO é kick falho.
+//   specs  (opcional) limita a certas specs. Sem isso, vale para toda spec em que a
+//          habilidade existir (o gerador consulta a árvore de talentos do patch).
+//
+// Validação (12.1.5): IDs medidos em ~90 lutas de Venomous Abyss. O Midnight removeu
+// interrupts dos healers, exceto o Wind Shear do Resto Shaman — consistente com os logs.
+// =============================================================================
+export const INTERRUPTS = {
+  DeathKnight: [{ spell: 47528, ids: [47528] }],                                   // Mind Freeze
+  DemonHunter: [{ spell: 183752, ids: [183752] }],                                 // Disrupt
+  Druid: [
+    { spell: 106839, ids: [106839, 93985] },                                       // Skull Bash
+    { spell: 78675, ids: [78675, 97547] },                                         // Solar Beam
+  ],
+  Evoker: [{ spell: 351338, ids: [351338] }],                                      // Quell
+  Hunter: [
+    { spell: 147362, ids: [147362] },                                              // Counter Shot
+    { spell: 187707, ids: [187707] },                                              // Muzzle
+  ],
+  Mage: [{ spell: 2139, ids: [2139] }],                                            // Counterspell
+  Monk: [{ spell: 116705, ids: [116705] }],                                        // Spear Hand Strike
+  Paladin: [
+    { spell: 96231, ids: [96231] },                                                // Rebuke
+    { spell: 31935, ids: [31935], specs: ['Protection'], incidental: true },  // Avenger's Shield: dano que às vezes interrompe
+  ],
+  Priest: [{ spell: 15487, ids: [15487, 220543], specs: ['Shadow'] }],             // Silence (healers perderam interrupt no Midnight)
+  Rogue: [{ spell: 1766, ids: [1766] }],                                           // Kick
+  Shaman: [{ spell: 57994, ids: [57994] }],                                        // Wind Shear
+  Warlock: [
+    { spell: 119910, ids: [119910, 19647, 132409, 119898], pet: true },            // Spell Lock / Command Demon (Felhunter)
+    { spell: 119914, ids: [119914, 89766], pet: true, specs: ['Demonology'] },     // Axe Toss (Felguard)
+  ],
+  Warrior: [{ spell: 6552, ids: [6552] }],                                         // Pummel
+};
+
 // Grupos de IDs de cast que são a MESMA habilidade para efeito de nota de raid
 // (a nota usa um ID, o log pode registrar outro conforme spec/talento). Defensivos
 // da lista acima já agrupam suas próprias variantes; aqui entram as demais.

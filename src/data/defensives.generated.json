@@ -2,7 +2,7 @@
  "meta": {
   "wowBuild": "12.1.5.70783",
   "environment": "live",
-  "generatedAt": "2026-11-20T04:37:48.305Z"
+  "generatedAt": "2026-11-20T05:16:13.743Z"
  },
  "specs": {
   "62": {
@@ -215,6 +215,14 @@
    "charges": 1,
    "duration": 10
   },
+  "1766": {
+   "id": 1766,
+   "name": "Kick",
+   "icon": "ability_kick",
+   "cooldown": 15,
+   "charges": 1,
+   "duration": 6
+  },
   "1856": {
    "id": 1856,
    "name": "Vanish",
@@ -230,6 +238,14 @@
    "cooldown": 15,
    "charges": 1,
    "duration": 6
+  },
+  "2139": {
+   "id": 2139,
+   "name": "Counterspell",
+   "icon": "spell_frost_iceshock",
+   "cooldown": 25,
+   "charges": 1,
+   "duration": 7
   },
   "5277": {
    "id": 5277,
@@ -255,6 +271,14 @@
    "charges": 1,
    "duration": 0
   },
+  "6552": {
+   "id": 6552,
+   "name": "Pummel",
+   "icon": "inv_gauntlets_04",
+   "cooldown": 15,
+   "charges": 1,
+   "duration": 5
+  },
   "6940": {
    "id": 6940,
    "name": "Blessing of Sacrifice",
@@ -278,6 +302,14 @@
    "cooldown": 120,
    "charges": 1,
    "duration": 12
+  },
+  "15487": {
+   "id": 15487,
+   "name": "Silence",
+   "icon": "ability_priest_silence",
+   "cooldown": 30,
+   "charges": 1,
+   "duration": 5
   },
   "19236": {
    "id": 19236,
@@ -335,6 +367,14 @@
    "charges": 1,
    "duration": 12
   },
+  "31935": {
+   "id": 31935,
+   "name": "Avenger's Shield",
+   "icon": "spell_holy_avengersshield",
+   "cooldown": 15,
+   "charges": 1,
+   "duration": 3
+  },
   "33206": {
    "id": 33206,
    "name": "Pain Suppression",
@@ -350,6 +390,14 @@
    "cooldown": 240,
    "charges": 1,
    "duration": 10
+  },
+  "47528": {
+   "id": 47528,
+   "name": "Mind Freeze",
+   "icon": "spell_deathknight_mindfreeze",
+   "cooldown": 15,
+   "charges": 1,
+   "duration": 5
   },
   "47585": {
    "id": 47585,
@@ -439,6 +487,14 @@
    "charges": 1,
    "duration": 15
   },
+  "57994": {
+   "id": 57994,
+   "name": "Wind Shear",
+   "icon": "spell_nature_cyclone",
+   "cooldown": 12,
+   "charges": 1,
+   "duration": 4
+  },
   "61336": {
    "id": 61336,
    "name": "Survival Instincts",
@@ -455,6 +511,14 @@
    "charges": 1,
    "duration": 10
   },
+  "78675": {
+   "id": 78675,
+   "name": "Solar Beam",
+   "icon": "ability_vehicle_sonicshockwave",
+   "cooldown": 60,
+   "charges": 1,
+   "duration": 8
+  },
   "86659": {
    "id": 86659,
    "name": "Guardian of Ancient Kings",
@@ -462,6 +526,14 @@
    "cooldown": 180,
    "charges": 1,
    "duration": 8
+  },
+  "96231": {
+   "id": 96231,
+   "name": "Rebuke",
+   "icon": "spell_holy_rebuke",
+   "cooldown": 15,
+   "charges": 1,
+   "duration": 5
   },
   "97462": {
    "id": 97462,
@@ -494,6 +566,14 @@
    "cooldown": 180,
    "charges": 1,
    "duration": 8
+  },
+  "106839": {
+   "id": 106839,
+   "name": "Skull Bash",
+   "icon": "inv_bone_skull_04",
+   "cooldown": 15,
+   "charges": 1,
+   "duration": 5
   },
   "108271": {
    "id": 108271,
@@ -535,6 +615,14 @@
    "charges": 1,
    "duration": 15
   },
+  "116705": {
+   "id": 116705,
+   "name": "Spear Hand Strike",
+   "icon": "ability_monk_spearhand",
+   "cooldown": 15,
+   "charges": 1,
+   "duration": 5
+  },
   "116849": {
    "id": 116849,
    "name": "Life Cocoon",
@@ -551,6 +639,22 @@
    "charges": 1,
    "duration": 8
   },
+  "119910": {
+   "id": 119910,
+   "name": "Spell Lock",
+   "icon": "spell_shadow_mindrot",
+   "cooldown": 0,
+   "charges": 1,
+   "duration": 7
+  },
+  "119914": {
+   "id": 119914,
+   "name": "Axe Toss",
+   "icon": "ability_warrior_titansgrip",
+   "cooldown": 0,
+   "charges": 1,
+   "duration": 4
+  },
   "122470": {
    "id": 122470,
    "name": "Touch of Karma",
@@ -558,6 +662,22 @@
    "cooldown": 90,
    "charges": 1,
    "duration": 10
+  },
+  "147362": {
+   "id": 147362,
+   "name": "Counter Shot",
+   "icon": "inv_ammo_arrow_03",
+   "cooldown": 24,
+   "charges": 1,
+   "duration": 5
+  },
+  "183752": {
+   "id": 183752,
+   "name": "Disrupt",
+   "icon": "ability_demonhunter_consumemagic",
+   "cooldown": 15,
+   "charges": 1,
+   "duration": 5
   },
   "184364": {
    "id": 184364,
@@ -582,6 +702,14 @@
    "cooldown": 180,
    "charges": 1,
    "duration": 8
+  },
+  "187707": {
+   "id": 187707,
+   "name": "Muzzle",
+   "icon": "ability_hunter_negate",
+   "cooldown": 15,
+   "charges": 1,
+   "duration": 5
   },
   "187827": {
    "id": 187827,
@@ -670,6 +798,14 @@
    "cooldown": 60,
    "charges": 1,
    "duration": 10
+  },
+  "351338": {
+   "id": 351338,
+   "name": "Quell",
+   "icon": "ability_evoker_quell",
+   "cooldown": 20,
+   "charges": 1,
+   "duration": 6
   },
   "357170": {
    "id": 357170,
@@ -4335,5 +4471,254 @@
    452930,
    385898
   ]
+ ],
+ "interrupts": [
+  {
+   "key": "DeathKnight:47528",
+   "className": "DeathKnight",
+   "spell": 47528,
+   "ids": [
+    47528
+   ],
+   "pet": false,
+   "incidental": false,
+   "specs": [
+    250,
+    251,
+    252
+   ]
+  },
+  {
+   "key": "DemonHunter:183752",
+   "className": "DemonHunter",
+   "spell": 183752,
+   "ids": [
+    183752
+   ],
+   "pet": false,
+   "incidental": false,
+   "specs": [
+    577,
+    581,
+    1480
+   ]
+  },
+  {
+   "key": "Druid:106839",
+   "className": "Druid",
+   "spell": 106839,
+   "ids": [
+    106839,
+    93985
+   ],
+   "pet": false,
+   "incidental": false,
+   "specs": [
+    103,
+    104
+   ]
+  },
+  {
+   "key": "Druid:78675",
+   "className": "Druid",
+   "spell": 78675,
+   "ids": [
+    78675,
+    97547
+   ],
+   "pet": false,
+   "incidental": false,
+   "specs": [
+    102
+   ]
+  },
+  {
+   "key": "Evoker:351338",
+   "className": "Evoker",
+   "spell": 351338,
+   "ids": [
+    351338
+   ],
+   "pet": false,
+   "incidental": false,
+   "specs": [
+    1467,
+    1473
+   ]
+  },
+  {
+   "key": "Hunter:147362",
+   "className": "Hunter",
+   "spell": 147362,
+   "ids": [
+    147362
+   ],
+   "pet": false,
+   "incidental": false,
+   "specs": [
+    253,
+    254
+   ]
+  },
+  {
+   "key": "Hunter:187707",
+   "className": "Hunter",
+   "spell": 187707,
+   "ids": [
+    187707
+   ],
+   "pet": false,
+   "incidental": false,
+   "specs": [
+    255
+   ]
+  },
+  {
+   "key": "Mage:2139",
+   "className": "Mage",
+   "spell": 2139,
+   "ids": [
+    2139
+   ],
+   "pet": false,
+   "incidental": false,
+   "specs": [
+    62,
+    63,
+    64
+   ]
+  },
+  {
+   "key": "Monk:116705",
+   "className": "Monk",
+   "spell": 116705,
+   "ids": [
+    116705
+   ],
+   "pet": false,
+   "incidental": false,
+   "specs": [
+    268,
+    269
+   ]
+  },
+  {
+   "key": "Paladin:96231",
+   "className": "Paladin",
+   "spell": 96231,
+   "ids": [
+    96231
+   ],
+   "pet": false,
+   "incidental": false,
+   "specs": [
+    66,
+    70
+   ]
+  },
+  {
+   "key": "Paladin:31935",
+   "className": "Paladin",
+   "spell": 31935,
+   "ids": [
+    31935
+   ],
+   "pet": false,
+   "incidental": true,
+   "specs": [
+    66
+   ]
+  },
+  {
+   "key": "Priest:15487",
+   "className": "Priest",
+   "spell": 15487,
+   "ids": [
+    15487,
+    220543
+   ],
+   "pet": false,
+   "incidental": false,
+   "specs": [
+    258
+   ]
+  },
+  {
+   "key": "Rogue:1766",
+   "className": "Rogue",
+   "spell": 1766,
+   "ids": [
+    1766
+   ],
+   "pet": false,
+   "incidental": false,
+   "specs": [
+    259,
+    260,
+    261
+   ]
+  },
+  {
+   "key": "Shaman:57994",
+   "className": "Shaman",
+   "spell": 57994,
+   "ids": [
+    57994
+   ],
+   "pet": false,
+   "incidental": false,
+   "specs": [
+    262,
+    263,
+    264
+   ]
+  },
+  {
+   "key": "Warlock:119910",
+   "className": "Warlock",
+   "spell": 119910,
+   "ids": [
+    119910,
+    19647,
+    132409,
+    119898
+   ],
+   "pet": true,
+   "incidental": false,
+   "specs": [
+    265,
+    266,
+    267
+   ]
+  },
+  {
+   "key": "Warlock:119914",
+   "className": "Warlock",
+   "spell": 119914,
+   "ids": [
+    119914,
+    89766
+   ],
+   "pet": true,
+   "incidental": false,
+   "specs": [
+    266
+   ]
+  },
+  {
+   "key": "Warrior:6552",
+   "className": "Warrior",
+   "spell": 6552,
+   "ids": [
+    6552
+   ],
+   "pet": false,
+   "incidental": false,
+   "specs": [
+    71,
+    72,
+    73
+   ]
+  }
  ]
 }

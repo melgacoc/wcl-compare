@@ -10,7 +10,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { DEFENSIVES, CONSUMABLES, CAST_ALIASES } from './defensives.config.mjs';
+import { DEFENSIVES, CONSUMABLES, CAST_ALIASES, INTERRUPTS } from './defensives.config.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = path.join(ROOT, 'src/data/defensives.generated.json');
@@ -134,6 +134,7 @@ for (const list of Object.values(DEFENSIVES)) for (const d of list) {
   for (const v of d.variants ?? []) allSpellIds.add(typeof v === 'number' ? v : v.spell);
 }
 for (const c of CONSUMABLES) for (const p of c.potions) allSpellIds.add(p.spell);
+for (const list of Object.values(INTERRUPTS)) for (const i of list) allSpellIds.add(i.spell);
 
 console.log(`Consultando ${allSpellIds.size} tooltips na Wowhead...`);
 const spells = {};
@@ -233,10 +234,29 @@ for (const c of CONSUMABLES) {
   consumables.push({ key: c.key, potions });
 }
 
+// ---------------------------------------------------------------- interrupts
+const interrupts = [];
+for (const [cls, list] of Object.entries(INTERRUPTS)) {
+  const classSpecs = specsOfClass[cls];
+  if (!classSpecs) { warn(`Interrupts: classe "${cls}" não existe no Raidbots`); continue; }
+  for (const i of list) {
+    const sp = spells[i.spell];
+    if (!sp) continue;
+    const wanted = i.specs
+      ? i.specs.map((n) => classSpecs.find((s) => specs[s].specName === n)).filter(Boolean)
+      : classSpecs;
+    // Talento: só existe nas specs cuja árvore o contém. Não-talento: todas as specs pedidas.
+    const eligible = wanted.filter((s) => !sp.isTalent || talentIndex[s]?.[i.spell]?.length);
+    if (!eligible.length) { warn(`Interrupts: "${sp.name}" (${i.spell}) não está em nenhuma árvore de ${cls} neste patch — removido? Ignorado.`); continue; }
+    interrupts.push({ key: `${cls}:${i.spell}`, className: cls, spell: i.spell, ids: [...new Set([i.spell, ...i.ids])], pet: !!i.pet, incidental: !!i.incidental, specs: eligible });
+  }
+}
+
 // Só guardamos no JSON as spells efetivamente usadas.
 const usedSpells = {};
 for (const d of defensives) for (const o of d.options) usedSpells[o.spell] = spells[o.spell];
 for (const c of consumables) for (const p of c.potions) usedSpells[p.spell] = spells[p.spell];
+for (const i of interrupts) usedSpells[i.spell] = spells[i.spell];
 for (const s of Object.values(usedSpells)) { delete s.mods; delete s.isTalent; }
 
 const output = {
@@ -246,6 +266,7 @@ const output = {
   defensives,
   consumables,
   aliases: CAST_ALIASES.map((g) => [...new Set(g)]),
+  interrupts,
 };
 await fs.mkdir(path.dirname(OUT), { recursive: true });
 await fs.writeFile(OUT, JSON.stringify(output, null, 1) + '\n');

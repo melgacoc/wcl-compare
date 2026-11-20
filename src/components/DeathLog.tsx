@@ -595,7 +595,8 @@ export function DeathLog() {
       {loadingDeaths && <div className="text-center p-10 text-zinc-500 animate-pulse">Carregando lista de óbitos...</div>}
         </TabsContent>
 
-        <TabsContent value="note-timer" className="space-y-6">
+        {/* forceMount: mantém o checker montado ao trocar de aba, preservando a nota e os resultados. */}
+        <TabsContent value="note-timer" forceMount className="space-y-6 data-[state=inactive]:hidden">
           <NoteTimerChecker code={report.code} fightId={report.fightId} />
         </TabsContent>
       </Tabs>

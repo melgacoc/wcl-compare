@@ -78,6 +78,7 @@ export const GET_NOTE_TIMER_FIGHT = gql`
           startTime
           endTime
           phaseTransitions { id startTime }
+          friendlyPets { id petOwner }
         }
         playerDetails(fightIDs: [$fightId])
         deaths: table(fightIDs: [$fightId], dataType: Deaths)
@@ -103,6 +104,40 @@ export const GET_NOTE_TIMER_CASTS = gql`
         ) {
           data
           nextPageTimestamp
+        }
+      }
+    }
+  }
+`;
+
+// Kick assign: interrupts bem-sucedidos de todo o elenco (id + instância do alvo, marcador, spell interrompida).
+export const GET_NOTE_TIMER_INTERRUPTS = gql`
+  query GetNoteTimerInterrupts($code: String!, $fightId: Int!, $startTime: Float!, $endTime: Float!) {
+    reportData {
+      report(code: $code) {
+        events(
+          fightIDs: [$fightId],
+          dataType: Interrupts,
+          hostilityType: Friendlies,
+          startTime: $startTime,
+          endTime: $endTime,
+          limit: 10000
+        ) {
+          data
+          nextPageTimestamp
+        }
+      }
+    }
+  }
+`;
+
+// Nomes dos NPCs (para rotular o alvo do kick). Lista pequena, buscada uma vez.
+export const GET_NOTE_TIMER_NPCS = gql`
+  query GetNoteTimerNpcs($code: String!) {
+    reportData {
+      report(code: $code) {
+        masterData(translate: true) {
+          actors(type: "NPC") { id name }
         }
       }
     }

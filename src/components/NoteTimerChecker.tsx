@@ -1,17 +1,22 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useApolloClient } from '@apollo/client/react';
-import { GET_NOTE_TIMER_FIGHT, GET_NOTE_TIMER_CASTS } from '@/lib/queries';
+import { GET_NOTE_TIMER_FIGHT, GET_NOTE_TIMER_CASTS, GET_NOTE_TIMER_INTERRUPTS, GET_NOTE_TIMER_NPCS } from '@/lib/queries';
 import { getSpecId, knownSpell, spellName } from '@/lib/defensives';
+import { evaluateKicks, kickCastIds, type InterruptRecord } from '@/lib/kicks';
 import {
   DEFAULT_TOLERANCE_S, castFilterExpression, evaluate, parseNote, planChecks, summarize,
   type CastRecord, type CheckPlan, type FightContext, type ParsedNote, type PlayerReport, type RosterPlayer, type TimerCheck,
 } from '@/lib/noteTimers';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Clock, Search, Skull, AlertTriangle, ClipboardPaste } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Clock, Search, Skull, AlertTriangle, ClipboardPaste, Trash2 } from 'lucide-react';
 import { useSpellTooltip } from '@/hooks/useSpellTooltip';
 import { SpellIcon } from './SpellIcon';
 import { SpellTooltip } from './SpellTooltip';
+import { KickAssignReport, type SpellMeta } from './KickAssignReport';
+
+const NOTE_STORAGE_KEY = 'wcl-compare:note-timer:note';
 
 interface Props {
   code: string;
@@ -24,15 +29,18 @@ interface LoadedData {
   casts: CastRecord[];
   fight: FightContext;
   pages: number;
+  roster: RosterPlayer[];
+  /** pet -> dono (Spell Lock / Axe Toss do warlock). */
+  pets: Record<number, number>;
+  interrupts: InterruptRecord[];
+  npcNames: Map<number, string>;
 }
-
-type SpellMeta = { name: string; icon: string };
 
 interface PlayerDetail { id: number; name: string; type: string; icon?: string }
 interface FightQueryData {
   reportData?: {
     report?: {
-      fights?: { startTime: number; endTime: number; phaseTransitions?: { id: number; startTime: number }[] }[];
+      fights?: { startTime: number; endTime: number; phaseTransitions?: { id: number; startTime: number }[]; friendlyPets?: { id: number; petOwner: number }[] }[];
       playerDetails?: { data?: { playerDetails?: Partial<Record<"tanks" | "healers" | "dps", PlayerDetail[]>> } };
       deaths?: { data?: { entries?: { id: number; timestamp: number }[] } };
     };
@@ -41,9 +49,15 @@ interface FightQueryData {
 interface CastsQueryData {
   reportData?: {
     report?: {
-      events?: { data?: { type: string; sourceID: number; timestamp: number; abilityGameID: number }[]; nextPageTimestamp?: number | null };
+      events?: {
+        data?: { type: string; sourceID: number; timestamp: number; abilityGameID: number; targetID?: number; targetInstance?: number; targetMarker?: number; extraAbilityGameID?: number }[];
+        nextPageTimestamp?: number | null;
+      };
     };
   };
+}
+interface NpcQueryData {
+  reportData?: { report?: { masterData?: { actors?: { id: number; name: string }[] } } };
 }
 
 // ----------------------------------------------------------------------------- helpers
@@ -179,12 +193,28 @@ export function CheckRow({
 // ----------------------------------------------------------------------------- componente principal
 export function NoteTimerChecker({ code, fightId }: Props) {
   const client = useApolloClient();
-  const [noteText, setNoteText] = useState('');
+  // A nota fica salva no navegador: sobrevive à troca de aba e a recarregar a página.
+  const [noteText, setNoteText] = useState(() => {
+    try { return localStorage.getItem(NOTE_STORAGE_KEY) ?? ''; } catch { return ''; }
+  });
+  useEffect(() => {
+    try {
+      if (noteText) localStorage.setItem(NOTE_STORAGE_KEY, noteText);
+      else localStorage.removeItem(NOTE_STORAGE_KEY);
+    } catch { /* storage indisponível (modo privado etc.): só não persiste */ }
+  }, [noteText]);
+
+  const clearNote = () => {
+    setNoteText('');
+    setData(null);
+    setError(null);
+  };
   const [toleranceS, setToleranceS] = useState(DEFAULT_TOLERANCE_S);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<LoadedData | null>(null);
   const [onlyProblems, setOnlyProblems] = useState(false);
+  const [tab, setTab] = useState<'cds' | 'kicks'>('cds');
   const [meta, setMeta] = useState<Map<number, SpellMeta>>(new Map());
   const { tooltip, showTooltip, hideTooltip } = useSpellTooltip();
 
@@ -195,8 +225,8 @@ export function NoteTimerChecker({ code, fightId }: Props) {
     setData(null);
     if (!code || !fightId) { setError('Selecione um report e uma luta primeiro (campo acima).'); return; }
     const parsed = parseNote(noteText);
-    if (!parsed.timers.length) {
-      setError('Não encontrei nenhum timer na nota. Procuro linhas "time:…;tag:…;spellid:…" (ou texto pedindo "CD pessoal").');
+    if (!parsed.timers.length && !parsed.kicks.length) {
+      setError('Não encontrei timers nem kicks na nota. Procuro linhas "time:…;tag:…;spellid:…", pedidos de "CD pessoal" e "assign:{ícone} Kick".');
       return;
     }
 
@@ -221,10 +251,11 @@ export function NoteTimerChecker({ code, fightId }: Props) {
 
       // 2) só os casts que a nota exige, de todos os jogadores, em uma consulta filtrada
       const plan = planChecks(parsed, roster);
+      const castIds = [...new Set([...plan.castIds, ...kickCastIds(parsed.kicks, roster)])];
       const casts: CastRecord[] = [];
       let pages = 0;
-      if (plan.castIds.length) {
-        const filter = castFilterExpression(plan.castIds);
+      if (castIds.length) {
+        const filter = castFilterExpression(castIds);
         let start: number | null = f.startTime;
         while (start !== null && pages < 30) {
           const res: { data?: CastsQueryData } = await client.query<CastsQueryData>({
@@ -234,17 +265,55 @@ export function NoteTimerChecker({ code, fightId }: Props) {
           });
           const ev = res.data?.reportData?.report?.events;
           for (const c of ev?.data ?? []) {
-            if (c.type === 'cast') casts.push({ sourceID: c.sourceID, t: c.timestamp - f.startTime, spellId: c.abilityGameID });
+            if (c.type === 'cast') {
+              casts.push({
+                sourceID: c.sourceID, t: c.timestamp - f.startTime, spellId: c.abilityGameID,
+                targetId: c.targetID, targetInstance: c.targetInstance, targetMarker: c.targetMarker,
+              });
+            }
           }
           start = ev?.nextPageTimestamp ?? null;
           pages++;
         }
       }
 
-      setData({ parsed, plan, casts, fight, pages });
+      // 2b) kick assign: interrupts bem-sucedidos de todo o elenco + nomes dos NPCs + dono dos pets
+      const pets: Record<number, number> = {};
+      for (const p of f.friendlyPets ?? []) pets[p.id] = p.petOwner;
+      const interrupts: InterruptRecord[] = [];
+      const npcNames = new Map<number, string>();
+      if (parsed.kicks.length) {
+        let istart: number | null = f.startTime;
+        let ipages = 0;
+        while (istart !== null && ipages < 30) {
+          const res: { data?: CastsQueryData } = await client.query<CastsQueryData>({
+            query: GET_NOTE_TIMER_INTERRUPTS,
+            variables: { code, fightId, startTime: istart, endTime: f.endTime },
+            fetchPolicy: 'network-only',
+          });
+          const ev = res.data?.reportData?.report?.events;
+          for (const e of ev?.data ?? []) {
+            if (e.type !== 'interrupt') continue;
+            interrupts.push({
+              sourceID: e.sourceID, t: e.timestamp - f.startTime, spellId: e.abilityGameID,
+              targetId: e.targetID ?? -1, targetInstance: e.targetInstance ?? 0,
+              marker: e.targetMarker, interruptedSpellId: e.extraAbilityGameID,
+            });
+          }
+          istart = ev?.nextPageTimestamp ?? null;
+          ipages++;
+        }
+        const npcRes = await client.query<NpcQueryData>({ query: GET_NOTE_TIMER_NPCS, variables: { code }, fetchPolicy: 'network-only' });
+        for (const a of npcRes.data?.reportData?.report?.masterData?.actors ?? []) npcNames.set(a.id, a.name);
+      }
+
+      setData({ parsed, plan, casts, fight, pages, roster, pets, interrupts, npcNames });
 
       // 3) nome/ícone das spells da nota (e dos casts de defensivos) para exibir
-      const ids = new Set<number>([...plan.noteSpellIds, ...casts.map((c) => c.spellId)]);
+      const ids = new Set<number>([
+        ...plan.noteSpellIds, ...casts.map((c) => c.spellId),
+        ...interrupts.flatMap((e) => [e.spellId, ...(e.interruptedSpellId ? [e.interruptedSpellId] : [])]),
+      ]);
       const entries = await Promise.all([...ids].map(async (id) => [id, await fetchSpellMeta(id)] as const));
       setMeta(new Map(entries));
     } catch (err) {
@@ -261,8 +330,17 @@ export function NoteTimerChecker({ code, fightId }: Props) {
     [data, toleranceS],
   );
   const summary = useMemo(() => (evaluation ? summarize(evaluation.reports) : null), [evaluation]);
+  const kickReport = useMemo(
+    () => (data && data.parsed.kicks.length ? evaluateKicks(data.parsed.kicks, data.roster, data.pets, data.casts, data.interrupts) : null),
+    [data],
+  );
 
   useEffect(() => { setData(null); setError(null); }, [code, fightId]);
+
+  // Abas: só existem as que a nota tem; se a escolhida não existe, cai na primeira.
+  const hasCds = !!data && data.parsed.timers.length > 0;
+  const hasKicks = !!data && !!kickReport;
+  const activeTab: 'cds' | 'kicks' = tab === 'kicks' && hasKicks ? 'kicks' : hasCds ? 'cds' : 'kicks';
 
   const visibleReports: PlayerReport[] = useMemo(() => {
     if (!evaluation) return [];
@@ -283,7 +361,17 @@ export function NoteTimerChecker({ code, fightId }: Props) {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <label className="text-xs text-zinc-400 flex items-center gap-1.5"><ClipboardPaste size={13} /> Nota</label>
+          <div className="flex items-center justify-between">
+            <label className="text-xs text-zinc-400 flex items-center gap-1.5"><ClipboardPaste size={13} /> Nota</label>
+            {noteText && (
+              <Button
+                type="button" size="sm" variant="ghost" onClick={clearNote}
+                className="h-7 px-2 text-xs text-zinc-400 hover:text-red-300 hover:bg-red-950/30"
+              >
+                <Trash2 size={13} className="mr-1.5" /> Limpar
+              </Button>
+            )}
+          </div>
           <textarea
             value={noteText}
             onChange={(e) => setNoteText(e.target.value)}
@@ -293,9 +381,9 @@ export function NoteTimerChecker({ code, fightId }: Props) {
           />
           {parsedPreview && (
             <div className="text-xs text-zinc-500">
-              {parsedPreview.timers.length > 0
-                ? <><b className="text-zinc-300">{parsedPreview.timers.length}</b> timers encontrados · {parsedPreview.ignoredLines} linhas descartadas (addons, posições, mecânicas)</>
-                : 'Nenhum timer reconhecido ainda.'}
+              {parsedPreview.timers.length > 0 || parsedPreview.kicks.length > 0
+                ? <><b className="text-zinc-300">{parsedPreview.timers.length}</b> timers · <b className="text-zinc-300">{parsedPreview.kicks.length}</b> kicks encontrados · {parsedPreview.ignoredLines} linhas descartadas (addons, posições, mecânicas)</>
+                : 'Nenhum timer ou kick reconhecido ainda.'}
               {parsedPreview.encounter?.id ? <> · encounter {parsedPreview.encounter.id}</> : null}
             </div>
           )}
@@ -324,8 +412,31 @@ export function NoteTimerChecker({ code, fightId }: Props) {
           </div>
         )}
 
-        {evaluation && summary && data && (
-          <div className="space-y-4 pt-4 border-t border-zinc-800">
+        <Tabs value={activeTab} onValueChange={(v) => setTab(v as 'cds' | 'kicks')} className="w-full space-y-4">
+        {data && (hasCds || hasKicks) && (
+          <TabsList className={`grid w-full max-w-md ${hasCds && hasKicks ? 'grid-cols-2' : 'grid-cols-1'}`}>
+            {hasCds && (
+              <TabsTrigger value="cds">
+                CDs{summary ? <span className="ml-2 text-[10px] font-mono opacity-70">{summary.used}/{summary.total}</span> : null}
+              </TabsTrigger>
+            )}
+            {hasKicks && (
+              <TabsTrigger value="kicks">
+                Kicks{kickReport ? <span className="ml-2 text-[10px] font-mono opacity-70">{kickReport.totals.markedKicks}</span> : null}
+              </TabsTrigger>
+            )}
+          </TabsList>
+        )}
+
+        {data && (
+          <label className="flex items-center gap-2 text-xs text-zinc-400 cursor-pointer select-none w-fit">
+            <input type="checkbox" checked={onlyProblems} onChange={(e) => setOnlyProblems(e.target.checked)} />
+            Mostrar só o que não foi cumprido
+          </label>
+        )}
+
+        {evaluation && summary && data && hasCds && (
+          <TabsContent value="cds" className="space-y-4">
             <div className="grid grid-cols-2 md:grid-cols-5 gap-2 text-center">
               {[
                 ['Cumpridos', summary.used, 'text-green-400'],
@@ -355,11 +466,6 @@ export function NoteTimerChecker({ code, fightId }: Props) {
                 </div>
               )}
             </div>
-
-            <label className="flex items-center gap-2 text-xs text-zinc-400 cursor-pointer select-none w-fit">
-              <input type="checkbox" checked={onlyProblems} onChange={(e) => setOnlyProblems(e.target.checked)} />
-              Mostrar só o que não foi cumprido
-            </label>
 
             <div className="space-y-3">
               {visibleReports.map(({ player, checks }) => {
@@ -397,8 +503,21 @@ export function NoteTimerChecker({ code, fightId }: Props) {
                 </div>
               )}
             </div>
-          </div>
+          </TabsContent>
         )}
+
+        {data && kickReport && (
+          <TabsContent value="kicks">
+            <KickAssignReport
+              report={kickReport}
+              npcNames={data.npcNames}
+              meta={meta}
+              onlyProblems={onlyProblems}
+              tooltip={{ show: showTooltip, hide: hideTooltip }}
+            />
+          </TabsContent>
+        )}
+        </Tabs>
       </CardContent>
       {tooltip && <SpellTooltip {...tooltip} />}
     </Card>

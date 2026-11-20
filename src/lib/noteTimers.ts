@@ -30,11 +30,35 @@ export interface NoteTimer {
   raw: string;
 }
 
+export type RaidIcon = 'star' | 'circle' | 'diamond' | 'triangle' | 'moon' | 'square' | 'cross' | 'skull';
+
+/** Número do marcador de raid, como o WCL o grava em `targetMarker`. */
+export const RAID_ICON_ID: Record<RaidIcon, number> = {
+  star: 1, circle: 2, diamond: 3, triangle: 4, moon: 5, square: 6, cross: 7, skull: 8,
+};
+export const RAID_ICON_BY_ID = Object.fromEntries(Object.entries(RAID_ICON_ID).map(([k, v]) => [v, k])) as Record<number, RaidIcon>;
+
+/** `tag:Jogador;assign:{moon} Kick and mark add #1;` — quem deve interromper o alvo marcado. */
+export interface KickAssign {
+  id: string;
+  line: number;
+  /** Jogador (um por linha; tags com vários nomes viram várias entradas). */
+  name: string;
+  icon: RaidIcon;
+  /** "Kick and mark add": quem marca o alvo e dá o primeiro kick. */
+  marker: boolean;
+  /** Número do kick (#1, #2...), se houver. */
+  seq?: number;
+  raw: string;
+}
+
 export interface ParsedNote {
   encounter?: { id?: number; name?: string; difficulty?: string };
   timers: NoteTimer[];
+  kicks: KickAssign[];
   totalLines: number;
   timerLines: number;
+  kickLines: number;
   ignoredLines: number;
 }
 
@@ -52,6 +76,10 @@ export interface CastRecord {
   /** ms desde o início da luta. */
   t: number;
   spellId: number;
+  /** Alvo e marcador de raid do alvo no instante do cast (quando o log os traz). */
+  targetId?: number;
+  targetInstance?: number;
+  targetMarker?: number;
 }
 
 export type CheckStatus =
@@ -103,11 +131,27 @@ const PERSONAL_CD_TEXT = /\b(?:cds?|cooldowns?|defensivos?|defensives?)\s+(?:pes
 const EVERYONE = new Set(['everyone', 'all', 'todos', 'raid']);
 
 // ----------------------------------------------------------------------------- 1) parser
+const ICON_TOKEN = /\{(star|circle|diamond|triangle|moon|square|cross|skull|x|rt([1-8]))\}/i;
+const ICON_BY_RT = Object.keys(RAID_ICON_ID) as RaidIcon[];
+const KICK_TEXT = /\b(?:kicks?|interrupts?|interromp\w*|quebr\w*)\b/i;
+
+/** Lê "assign:{moon} Kick and mark add #1" -> ícone, se marca e nº do kick; null se não for um kick. */
+function parseKickAssign(assign: string): { icon: RaidIcon; marker: boolean; seq?: number } | null {
+  const m = ICON_TOKEN.exec(assign);
+  if (!m || !KICK_TEXT.test(assign)) return null;
+  const token = m[1].toLowerCase();
+  const icon: RaidIcon = m[2] ? ICON_BY_RT[Number(m[2]) - 1] : token === 'x' ? 'cross' : (token as RaidIcon);
+  const seq = /#\s*(\d+)/.exec(assign)?.[1];
+  return { icon, marker: /\bmark/i.test(assign), seq: seq ? Number(seq) : undefined };
+}
+
 export function parseNote(text: string): ParsedNote {
   const lines = text.split(/\r?\n/);
   const timers: NoteTimer[] = [];
+  const kicks: KickAssign[] = [];
   let encounter: ParsedNote['encounter'];
   let timerLines = 0;
+  let kickLines = 0;
   let nonEmpty = 0;
 
   lines.forEach((rawLine, i) => {
@@ -120,7 +164,19 @@ export function parseNote(text: string): ParsedNote {
       encounter = { id: Number(f.encounterid) || undefined, name: f.name, difficulty: f.difficulty };
       return;
     }
-    if (!/^time:/i.test(line)) return; // blocos de texto, assign:, invitelist, intstart... não são timers
+    if (!/^time:/i.test(line)) {
+      // `tag:Nome;assign:{ícone} Kick ...` é o único assign que nos interessa.
+      if (/^tag:/i.test(line)) {
+        const f = parseFields(line);
+        const kick = f.assign ? parseKickAssign(f.assign) : null;
+        if (kick) {
+          kickLines++;
+          (f.tag ?? '').split(/\s+/).filter(Boolean).forEach((name) =>
+            kicks.push({ id: `${i + 1}:${name}`, line: i + 1, name, ...kick, raw: line }));
+        }
+      }
+      return; // blocos de texto, invitelist, intstart... não são timers
+    }
 
     const f = parseFields(line);
     const time = parseTime(f.time ?? '');
@@ -143,7 +199,10 @@ export function parseNote(text: string): ParsedNote {
   });
 
   timers.sort((a, b) => a.phase - b.phase || a.time - b.time || a.line - b.line);
-  return { encounter, timers, totalLines: nonEmpty, timerLines, ignoredLines: nonEmpty - timerLines - (encounter ? 1 : 0) };
+  return {
+    encounter, timers, kicks, totalLines: nonEmpty, timerLines, kickLines,
+    ignoredLines: nonEmpty - timerLines - kickLines - (encounter ? 1 : 0),
+  };
 }
 
 function parseFields(line: string): Record<string, string> {

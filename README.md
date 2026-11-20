@@ -70,3 +70,21 @@ Para ficar leve, é feita **uma** consulta ao WCL com `filterExpression` contend
 que a nota exige (variantes por talento incluídas), para todos os jogadores de uma vez; só entram
 defensivos/poções se a nota pedir. Detalhe da API: `startTime` sem `endTime` retorna 0 eventos, então
 sempre se envia os dois.
+
+### Kick assign
+
+Linhas `tag:Jogador;assign:{moon} Kick and mark add #1;` (ícones: star, circle, diamond, triangle,
+moon, square, cross, skull) viram a escala de interrupts. Para cada uma o checker baixa os eventos
+de **interrupt** de todo o elenco e os **casts** de kick dos escalados. Ambos trazem o alvo
+(`targetID` + `targetInstance`, que distingue mobs de mesmo nome) e `targetMarker`, a marcação que o
+alvo tinha naquele instante. O resultado mostra, por marca, a sequência de kicks (de escalados ou
+não) e, por jogador, se interrompeu a marca certa, outra marca, um alvo sem marcação ou se o kick
+não surtiu efeito.
+
+Os interrupts por classe/spec ficam em `INTERRUPTS` no `scripts/defensives.config.mjs`. O gerador
+usa a árvore de talentos do patch para saber em que specs cada um existe (ex.: Quell só em
+Devastation/Augmentation; healers perderam interrupts no Midnight, exceto Wind Shear do Resto
+Shaman). `ids` lista todos os IDs de log de um interrupt (o do cast e o do efeito, que podem
+diferir: Skull Bash 106839/93985, Silence 15487/220543, Solar Beam 78675/97547). Se um patch mudar
+os IDs, meça no log: `dataType: Interrupts` mostra o `abilityGameID` real de cada kick.
+`incidental: true` marca dano que só às vezes interrompe (Avenger's Shield).

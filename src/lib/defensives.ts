@@ -30,6 +30,19 @@ interface DefensiveDef {
 }
 interface SpellInfo { id: number; name: string; icon: string; cooldown: number; charges: number; duration: number }
 interface PotionTier { itemId: number; heal: number; quality: number }
+export interface InterruptDef {
+  key: string;
+  className: string;
+  /** ID do cast (nome/ícone vêm de DATA.spells). */
+  spell: number;
+  /** Todos os IDs que o log usa para este interrupt (cast e efeito). */
+  ids: number[];
+  /** Executado pelo pet (Spell Lock, Axe Toss). */
+  pet: boolean;
+  /** Dano que só às vezes interrompe (Avenger's Shield): cast sem interrupt não é kick falho. */
+  incidental?: boolean;
+  specs: number[];
+}
 interface ConsumableDef { key: string; potions: { spell: number; tiers: PotionTier[] }[] }
 
 interface GeneratedData {
@@ -39,6 +52,7 @@ interface GeneratedData {
   defensives: DefensiveDef[];
   consumables: ConsumableDef[];
   aliases?: number[][];
+  interrupts?: InterruptDef[];
 }
 
 const DATA = generated as unknown as GeneratedData;
@@ -391,4 +405,24 @@ export function consumablesAt(casts: CastEvent[], heals: HealEvent[], atTimestam
     result.push({ key: c.key, spell: shown, castIds: ids, status, readyIn, uses });
   }
   return result;
+}
+
+// ----------------------------------------------------------------------------- interrupts
+/** Interrupts que a classe/spec pode ter neste patch (talentos incluídos; não sabemos qual foi escolhido). */
+export function interruptsFor(className: string, specId?: number): InterruptDef[] {
+  return (DATA.interrupts ?? []).filter((i) => i.className === className && (!specId || i.specs.includes(specId)));
+}
+
+/** IDs de log (cast + efeito) dos interrupts da classe/spec — para filtrar a API. */
+export function interruptIdsFor(className: string, specId?: number): number[] {
+  return [...new Set(interruptsFor(className, specId).flatMap((i) => i.ids))];
+}
+
+export function interruptSpellInfo(def: InterruptDef): { name: string; icon: string } {
+  return knownSpell(def.spell) ?? { name: `Spell ${def.spell}`, icon: "inv_misc_questionmark" };
+}
+
+/** IDs de interrupts incidentais: só contam quando geram um evento de interrupt. */
+export function incidentalInterruptIds(): Set<number> {
+  return new Set((DATA.interrupts ?? []).filter((i) => i.incidental).flatMap((i) => i.ids));
 }
