@@ -7,11 +7,12 @@ import { useSpellTooltip } from '@/hooks/useSpellTooltip';
 import { SpellIcon } from '@/components/SpellIcon';
 import { SpellTooltip } from '@/components/SpellTooltip';
 import { useState, useEffect } from 'react';
+import { PlayerName } from '@/components/PlayerName';
 
 interface AbilityComparatorProps {
-  playerA: { id: number; name: string; spec: string };
+  playerA: { id: number; name: string; spec: string; className?: string };
   reportA: { code: string; fightId: number };
-  playerB: { id: number; name: string; spec: string };
+  playerB: { id: number; name: string; spec: string; className?: string };
   reportB: { code: string; fightId: number };
   dataType: 'DamageDone' | 'Healing';
 }
@@ -115,8 +116,8 @@ export function AbilityComparator({ playerA, reportA, playerB, reportB, dataType
           Comparativo de Habilidades: <span className="text-purple-300">{playerA.spec}</span>
         </CardTitle>
         <div className="flex justify-between text-sm mt-2 text-zinc-400">
-          <span className="text-blue-400 font-bold">A: {playerA.name}</span>
-          <span className="text-orange-400 font-bold">B: {playerB.name}</span>
+          <span className="text-blue-400 font-bold">A: <PlayerName name={playerA.name} className={playerA.className} /></span>
+          <span className="text-orange-400 font-bold">B: <PlayerName name={playerB.name} className={playerB.className} /></span>
         </div>
       </CardHeader>
       <CardContent className="p-0">

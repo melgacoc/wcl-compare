@@ -3,6 +3,8 @@ import type { RaidIcon } from '@/lib/noteTimers';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { AlertTriangle } from 'lucide-react';
 import { SpellIcon } from './SpellIcon';
+import { ClassTag, PlayerName } from './PlayerName';
+import { prettyClass } from '@/lib/classColors';
 
 export type SpellMeta = { name: string; icon: string };
 
@@ -108,11 +110,9 @@ function PlayerCard({ p, props }: { p: PlayerKickReport; props: Props }) {
     <Card className="bg-zinc-950 border-zinc-800">
       <CardHeader className="pb-3">
         <div className="flex items-center gap-3 flex-wrap">
-          <CardTitle className="text-base text-zinc-100">{p.name}</CardTitle>
+          <CardTitle className="text-base text-zinc-100"><PlayerName name={p.name} className={p.player?.className} /></CardTitle>
           {p.player && (
-            <span className="text-xs font-semibold text-zinc-500 bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">
-              {p.player.specName} {p.player.className}
-            </span>
+            <ClassTag className={p.player.className} label={`${p.player.specName} ${prettyClass(p.player.className)}`} />
           )}
           <span className="flex items-center gap-1.5 text-xs text-zinc-400">
             escalado em {p.icons.map((i) => <RaidIconBadge key={i} icon={i} />)}
@@ -182,9 +182,9 @@ export function KickAssignReport(props: Props) {
                 <RaidIconBadge icon={ic.icon} withLabel />
                 <span className="text-xs text-zinc-500">escalados:</span>
                 {ic.assigned.map((a) => (
-                  <span key={a.name} className={`text-xs px-1.5 py-0.5 rounded border ${a.present ? 'border-zinc-700 text-zinc-300' : 'border-amber-700/50 text-amber-500'}`}
+                  <span key={a.name} className={`text-xs px-1.5 py-0.5 rounded border ${a.present ? 'border-zinc-700' : 'border-amber-700/50 text-amber-500'}`}
                     title={a.present ? undefined : 'ausente desta luta'}>
-                    {a.name}{a.marker ? ' ✎' : ''}
+                    {a.present ? <PlayerName name={a.name} className={a.className} /> : a.name}{a.marker ? ' ✎' : ''}
                   </span>
                 ))}
               </div>
@@ -199,7 +199,7 @@ export function KickAssignReport(props: Props) {
                     !s.success ? 'border-zinc-700/60 bg-zinc-900' : s.byAssigned ? 'border-green-500/30 bg-green-950/20' : 'border-amber-500/30 bg-amber-950/20'}`}>
                     <span className="font-mono text-zinc-500 w-6">#{s.n}</span>
                     <span className="font-mono text-zinc-400 w-10">{fmt(s.t)}</span>
-                    <span className={`font-medium ${s.byAssigned ? 'text-green-300' : 'text-amber-300'}`}>{s.playerName ?? `Jogador ${s.playerId}`}</span>
+                    <span className="font-medium"><PlayerName name={s.playerName ?? `Jogador ${s.playerId}`} className={s.className} /></span>
                     <span className="text-zinc-500 truncate">→ {npcNames.get(s.targetId) ?? `NPC ${s.targetId}`} #{s.targetInstance}</span>
                     <span className="ml-auto text-[10px] font-bold shrink-0">
                       {!s.success ? <span className="text-zinc-500">SEM EFEITO</span> : s.byAssigned ? <span className="text-green-400">ESCALADO</span> : <span className="text-amber-400">NÃO ESCALADO</span>}

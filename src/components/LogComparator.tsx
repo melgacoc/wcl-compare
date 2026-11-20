@@ -2,19 +2,13 @@ import { useState, useMemo, useEffect } from 'react';
 import { useLazyQuery } from '@apollo/client/react';
 import { GET_REPORT_DATA } from '@/lib/queries';
 import { AbilityComparator } from './AbilityComparator';
+import { CLASS_COLORS } from '@/lib/classColors';
+import { PlayerName } from './PlayerName';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Swords, Link as LinkIcon, Filter, XCircle, Shield, Cross, Zap, Heart, Split } from 'lucide-react';
-
-const CLASS_COLORS: Record<string, string> = {
-  "DeathKnight": "#C41F3B", "DemonHunter": "#A330C9", "Druid": "#FF7D0A",
-  "Evoker": "#33937F", "Hunter": "#ABD473", "Mage": "#40C7EB",
-  "Monk": "#00FF96", "Paladin": "#F58CBA", "Priest": "#FFFFFF",
-  "Rogue": "#FFF569", "Shaman": "#0070DE", "Warlock": "#8787ED",
-  "Warrior": "#C79C6E", 
-};
 
 const getRoleIcon = (spec: string) => {
   const tanks = ['Blood', 'Vengeance', 'Guardian', 'Brewmaster', 'Protection', 'Protection Warrior'];
@@ -211,7 +205,7 @@ export function LogComparator() {
                                         <div className="bg-zinc-950 p-1 rounded-full border border-zinc-700"><span title={p.icon}>{getRoleIcon(p.icon)}</span></div>
                                         <div className="flex flex-col">
                                             <span className="font-bold text-sm tracking-wide" style={{ color: CLASS_COLORS[p.type] }}>{p.cleanName}</span>
-                                            <span className="text-[10px] text-zinc-400 uppercase font-semibold">{p.icon.split('-').pop()}</span>
+                                            <PlayerName name={p.icon.split('-').pop() ?? ''} className={p.type} extra="text-[10px] uppercase font-semibold opacity-70" />
                                         </div>
                                     </div>
                                 </TableCell>
@@ -237,7 +231,7 @@ export function LogComparator() {
                                         <div className="bg-zinc-950 p-1 rounded-full border border-zinc-700"><span title={p.icon}>{getRoleIcon(p.icon)}</span></div>
                                         <div className="flex flex-col">
                                             <span className="font-bold text-sm tracking-wide" style={{ color: CLASS_COLORS[p.type] }}>{p.cleanName}</span>
-                                            <span className="text-[10px] text-zinc-400 uppercase font-semibold">{p.icon.split('-').pop()}</span>
+                                            <PlayerName name={p.icon.split('-').pop() ?? ''} className={p.type} extra="text-[10px] uppercase font-semibold opacity-70" />
                                         </div>
                                     </div>
                                 </TableCell>
@@ -268,9 +262,9 @@ export function LogComparator() {
 
       {showAbilityComparison && selectedPlayerA && selectedPlayerB && (
           <AbilityComparator 
-             playerA={{ id: selectedPlayerA.id, name: selectedPlayerA.cleanName, spec: selectedPlayerA.icon.split('-').pop() || '' }}
+             playerA={{ id: selectedPlayerA.id, name: selectedPlayerA.cleanName, className: selectedPlayerA.type, spec: selectedPlayerA.icon.split('-').pop() || '' }}
              reportA={reportA}
-             playerB={{ id: selectedPlayerB.id, name: selectedPlayerB.cleanName, spec: selectedPlayerB.icon.split('-').pop() || '' }}
+             playerB={{ id: selectedPlayerB.id, name: selectedPlayerB.cleanName, className: selectedPlayerB.type, spec: selectedPlayerB.icon.split('-').pop() || '' }}
              reportB={reportB}
              dataType={metric}
           />

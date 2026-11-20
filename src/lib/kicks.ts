@@ -58,13 +58,14 @@ export interface IconSequenceEntry extends KickAttempt {
   n: number;
   /** Quem fez o kick; undefined se o jogador nem está no elenco mapeado. */
   playerName?: string;
+  className?: string;
   byAssigned: boolean;
 }
 
 export interface IconKickReport {
   icon: RaidIcon;
   marker: number;
-  assigned: { name: string; marker: boolean; seqs: number[]; present: boolean }[];
+  assigned: { name: string; className?: string; marker: boolean; seqs: number[]; present: boolean }[];
   sequence: IconSequenceEntry[];
 }
 
@@ -184,6 +185,7 @@ export function evaluateKicks(
       const list = assignedAssigns.filter((k) => normalizeName(k.name) === n);
       return {
         name: list[0].name,
+        className: rosterByName.get(n)?.className,
         marker: list.some((k) => k.marker),
         seqs: list.map((k) => k.seq).filter((s): s is number => s !== undefined),
         present: rosterByName.has(n),
@@ -193,7 +195,7 @@ export function evaluateKicks(
       const p = playerById.get(a.playerId);
       const isAssigned = !!p && assignedNames.has(normalizeName(p.name));
       if (a.success) { markedKicks++; if (isAssigned) byAssigned++; }
-      return { ...a, n: i + 1, playerName: p?.name, byAssigned: isAssigned };
+      return { ...a, n: i + 1, playerName: p?.name, className: p?.className, byAssigned: isAssigned };
     });
     return { icon, marker, assigned, sequence };
   });

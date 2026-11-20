@@ -16,6 +16,8 @@ import { useSpellTooltip } from '@/hooks/useSpellTooltip';
 import { SpellIcon } from './SpellIcon';
 import { SpellTooltip } from './SpellTooltip';
 import { NoteTimerChecker } from './NoteTimerChecker';
+import { ClassTag, PlayerName } from './PlayerName';
+import { prettyClass } from '@/lib/classColors';
 
 interface DeathEntry {
   name: string;
@@ -480,13 +482,13 @@ export function DeathLog() {
                             <span className="text-3xl font-black text-zinc-700">#{index + 1}</span>
                             <div>
                                 <div className="flex items-baseline gap-2">
-                                    <h3 className="text-lg font-bold text-zinc-100">{death.name}</h3>
-                                    <span className="text-xs font-semibold text-zinc-500 bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">{death.spec}</span>
+                                    <h3 className="text-lg font-bold text-zinc-100"><PlayerName name={death.name} className={death.type} /></h3>
+                                    <ClassTag className={death.type} label={death.spec ?? ''} />
                                 </div>
                                 <div className="flex items-center gap-2 text-red-400 font-mono text-sm mt-1">
                                     <Clock size={14} /> Morreu aos {formatTime(death.deathRelativeTime || 0)}
                                 </div>
-                                <span className="text-[10px] text-zinc-600 uppercase tracking-widest">{death.type}</span>
+                                <PlayerName name={prettyClass(death.type)} className={death.type} extra="text-[10px] uppercase tracking-widest opacity-70" />
                             </div>
                         </div>
                         <div className="p-4 flex-1 flex flex-col justify-center">

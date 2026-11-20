@@ -13,6 +13,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Clock, Search, Skull, AlertTriangle, ClipboardPaste, Trash2 } from 'lucide-react';
 import { useSpellTooltip } from '@/hooks/useSpellTooltip';
 import { SpellIcon } from './SpellIcon';
+import { ClassTag, PlayerName } from './PlayerName';
+import { prettyClass } from '@/lib/classColors';
 import { SpellTooltip } from './SpellTooltip';
 import { KickAssignReport, type SpellMeta } from './KickAssignReport';
 
@@ -475,10 +477,8 @@ export function NoteTimerChecker({ code, fightId }: Props) {
                   <Card key={player.id} className="bg-zinc-950 border-zinc-800">
                     <CardHeader className="pb-3">
                       <div className="flex items-center gap-3 flex-wrap">
-                        <CardTitle className="text-base text-zinc-100">{player.name}</CardTitle>
-                        <span className="text-xs font-semibold text-zinc-500 bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">
-                          {player.specName} {player.className}
-                        </span>
+                        <CardTitle className="text-base text-zinc-100"><PlayerName name={player.name} className={player.className} /></CardTitle>
+                        <ClassTag className={player.className} label={`${player.specName} ${prettyClass(player.className)}`} />
                         <span className={`text-[10px] font-bold uppercase ${ROLE_STYLE[player.role]}`}>{ROLE_LABEL[player.role]}</span>
                         <span className="ml-auto text-xs font-mono text-zinc-400">{ok}/{countable}</span>
                       </div>
