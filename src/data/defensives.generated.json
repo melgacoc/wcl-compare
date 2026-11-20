@@ -1,0 +1,4293 @@
+{
+ "meta": {
+  "wowBuild": "12.1.5.70783",
+  "environment": "live",
+  "generatedAt": "2026-11-20T03:25:42.630Z"
+ },
+ "specs": {
+  "62": {
+   "className": "Mage",
+   "specName": "Arcane"
+  },
+  "63": {
+   "className": "Mage",
+   "specName": "Fire"
+  },
+  "64": {
+   "className": "Mage",
+   "specName": "Frost"
+  },
+  "65": {
+   "className": "Paladin",
+   "specName": "Holy"
+  },
+  "66": {
+   "className": "Paladin",
+   "specName": "Protection"
+  },
+  "70": {
+   "className": "Paladin",
+   "specName": "Retribution"
+  },
+  "71": {
+   "className": "Warrior",
+   "specName": "Arms"
+  },
+  "72": {
+   "className": "Warrior",
+   "specName": "Fury"
+  },
+  "73": {
+   "className": "Warrior",
+   "specName": "Protection"
+  },
+  "102": {
+   "className": "Druid",
+   "specName": "Balance"
+  },
+  "103": {
+   "className": "Druid",
+   "specName": "Feral"
+  },
+  "104": {
+   "className": "Druid",
+   "specName": "Guardian"
+  },
+  "105": {
+   "className": "Druid",
+   "specName": "Restoration"
+  },
+  "250": {
+   "className": "DeathKnight",
+   "specName": "Blood"
+  },
+  "251": {
+   "className": "DeathKnight",
+   "specName": "Frost"
+  },
+  "252": {
+   "className": "DeathKnight",
+   "specName": "Unholy"
+  },
+  "253": {
+   "className": "Hunter",
+   "specName": "BeastMastery"
+  },
+  "254": {
+   "className": "Hunter",
+   "specName": "Marksmanship"
+  },
+  "255": {
+   "className": "Hunter",
+   "specName": "Survival"
+  },
+  "256": {
+   "className": "Priest",
+   "specName": "Discipline"
+  },
+  "257": {
+   "className": "Priest",
+   "specName": "Holy"
+  },
+  "258": {
+   "className": "Priest",
+   "specName": "Shadow"
+  },
+  "259": {
+   "className": "Rogue",
+   "specName": "Assassination"
+  },
+  "260": {
+   "className": "Rogue",
+   "specName": "Outlaw"
+  },
+  "261": {
+   "className": "Rogue",
+   "specName": "Subtlety"
+  },
+  "262": {
+   "className": "Shaman",
+   "specName": "Elemental"
+  },
+  "263": {
+   "className": "Shaman",
+   "specName": "Enhancement"
+  },
+  "264": {
+   "className": "Shaman",
+   "specName": "Restoration"
+  },
+  "265": {
+   "className": "Warlock",
+   "specName": "Affliction"
+  },
+  "266": {
+   "className": "Warlock",
+   "specName": "Demonology"
+  },
+  "267": {
+   "className": "Warlock",
+   "specName": "Destruction"
+  },
+  "268": {
+   "className": "Monk",
+   "specName": "Brewmaster"
+  },
+  "269": {
+   "className": "Monk",
+   "specName": "Windwalker"
+  },
+  "270": {
+   "className": "Monk",
+   "specName": "Mistweaver"
+  },
+  "577": {
+   "className": "DemonHunter",
+   "specName": "Havoc"
+  },
+  "581": {
+   "className": "DemonHunter",
+   "specName": "Vengeance"
+  },
+  "1467": {
+   "className": "Evoker",
+   "specName": "Devastation"
+  },
+  "1468": {
+   "className": "Evoker",
+   "specName": "Preservation"
+  },
+  "1473": {
+   "className": "Evoker",
+   "specName": "Augmentation"
+  },
+  "1480": {
+   "className": "DemonHunter",
+   "specName": "Devourer"
+  }
+ },
+ "spells": {
+  "498": {
+   "id": 498,
+   "name": "Divine Protection",
+   "icon": "spell_holy_divineprotection",
+   "cooldown": 60,
+   "charges": 1,
+   "duration": 8
+  },
+  "586": {
+   "id": 586,
+   "name": "Fade",
+   "icon": "spell_magic_lesserinvisibilty",
+   "cooldown": 30,
+   "charges": 1,
+   "duration": 10
+  },
+  "633": {
+   "id": 633,
+   "name": "Lay on Hands",
+   "icon": "spell_holy_layonhands",
+   "cooldown": 600,
+   "charges": 1,
+   "duration": 30
+  },
+  "642": {
+   "id": 642,
+   "name": "Divine Shield",
+   "icon": "spell_holy_divineshield",
+   "cooldown": 300,
+   "charges": 1,
+   "duration": 8
+  },
+  "871": {
+   "id": 871,
+   "name": "Shield Wall",
+   "icon": "ability_warrior_shieldwall",
+   "cooldown": 180,
+   "charges": 1,
+   "duration": 8
+  },
+  "1022": {
+   "id": 1022,
+   "name": "Blessing of Protection",
+   "icon": "spell_holy_sealofprotection",
+   "cooldown": 300,
+   "charges": 1,
+   "duration": 10
+  },
+  "1856": {
+   "id": 1856,
+   "name": "Vanish",
+   "icon": "ability_vanish",
+   "cooldown": 120,
+   "charges": 1,
+   "duration": 0
+  },
+  "1966": {
+   "id": 1966,
+   "name": "Feint",
+   "icon": "ability_rogue_feint",
+   "cooldown": 15,
+   "charges": 1,
+   "duration": 6
+  },
+  "5277": {
+   "id": 5277,
+   "name": "Evasion",
+   "icon": "spell_shadow_shadowward",
+   "cooldown": 120,
+   "charges": 1,
+   "duration": 10
+  },
+  "5384": {
+   "id": 5384,
+   "name": "Feign Death",
+   "icon": "ability_rogue_feigndeath",
+   "cooldown": 30,
+   "charges": 1,
+   "duration": 360
+  },
+  "6262": {
+   "id": 6262,
+   "name": "Healthstone",
+   "icon": "warlock_-healthstone",
+   "cooldown": 60,
+   "charges": 1,
+   "duration": 0
+  },
+  "6940": {
+   "id": 6940,
+   "name": "Blessing of Sacrifice",
+   "icon": "spell_holy_sealofsacrifice",
+   "cooldown": 120,
+   "charges": 1,
+   "duration": 12
+  },
+  "11426": {
+   "id": 11426,
+   "name": "Ice Barrier",
+   "icon": "spell_ice_lament",
+   "cooldown": 30,
+   "charges": 1,
+   "duration": 60
+  },
+  "15286": {
+   "id": 15286,
+   "name": "Vampiric Embrace",
+   "icon": "spell_shadow_unsummonbuilding",
+   "cooldown": 120,
+   "charges": 1,
+   "duration": 12
+  },
+  "19236": {
+   "id": 19236,
+   "name": "Desperate Prayer",
+   "icon": "spell_holy_testoffaith",
+   "cooldown": 90,
+   "charges": 1,
+   "duration": 10
+  },
+  "22812": {
+   "id": 22812,
+   "name": "Barkskin",
+   "icon": "spell_nature_stoneclawtotem",
+   "cooldown": 60,
+   "charges": 1,
+   "duration": 8
+  },
+  "22842": {
+   "id": 22842,
+   "name": "Frenzied Regeneration",
+   "icon": "ability_bullrush",
+   "cooldown": 36,
+   "charges": 1,
+   "duration": 3
+  },
+  "23920": {
+   "id": 23920,
+   "name": "Spell Reflection",
+   "icon": "ability_warrior_shieldreflection",
+   "cooldown": 25,
+   "charges": 1,
+   "duration": 5
+  },
+  "31224": {
+   "id": 31224,
+   "name": "Cloak of Shadows",
+   "icon": "spell_shadow_nethercloak",
+   "cooldown": 120,
+   "charges": 1,
+   "duration": 5
+  },
+  "31821": {
+   "id": 31821,
+   "name": "Aura Mastery",
+   "icon": "spell_holy_auramastery",
+   "cooldown": 180,
+   "charges": 1,
+   "duration": 8
+  },
+  "31850": {
+   "id": 31850,
+   "name": "Ardent Defender",
+   "icon": "spell_holy_ardentdefender",
+   "cooldown": 90,
+   "charges": 1,
+   "duration": 12
+  },
+  "33206": {
+   "id": 33206,
+   "name": "Pain Suppression",
+   "icon": "spell_holy_painsupression",
+   "cooldown": 180,
+   "charges": 1,
+   "duration": 8
+  },
+  "45438": {
+   "id": 45438,
+   "name": "Ice Block",
+   "icon": "spell_frost_frost",
+   "cooldown": 240,
+   "charges": 1,
+   "duration": 10
+  },
+  "47585": {
+   "id": 47585,
+   "name": "Dispersion",
+   "icon": "spell_shadow_dispersion",
+   "cooldown": 120,
+   "charges": 1,
+   "duration": 6
+  },
+  "47788": {
+   "id": 47788,
+   "name": "Guardian Spirit",
+   "icon": "spell_holy_guardianspirit",
+   "cooldown": 180,
+   "charges": 1,
+   "duration": 10
+  },
+  "48707": {
+   "id": 48707,
+   "name": "Anti-Magic Shell",
+   "icon": "spell_shadow_antimagicshell",
+   "cooldown": 60,
+   "charges": 1,
+   "duration": 5
+  },
+  "48743": {
+   "id": 48743,
+   "name": "Death Pact",
+   "icon": "spell_shadow_deathpact",
+   "cooldown": 120,
+   "charges": 1,
+   "duration": 15
+  },
+  "48792": {
+   "id": 48792,
+   "name": "Icebound Fortitude",
+   "icon": "spell_deathknight_iceboundfortitude",
+   "cooldown": 120,
+   "charges": 1,
+   "duration": 8
+  },
+  "49028": {
+   "id": 49028,
+   "name": "Dancing Rune Weapon",
+   "icon": "inv_sword_07",
+   "cooldown": 120,
+   "charges": 1,
+   "duration": 8
+  },
+  "49039": {
+   "id": 49039,
+   "name": "Lichborne",
+   "icon": "spell_shadow_raisedead",
+   "cooldown": 120,
+   "charges": 1,
+   "duration": 10
+  },
+  "51052": {
+   "id": 51052,
+   "name": "Anti-Magic Zone",
+   "icon": "spell_deathknight_antimagiczone",
+   "cooldown": 240,
+   "charges": 1,
+   "duration": 6
+  },
+  "53480": {
+   "id": 53480,
+   "name": "Roar of Sacrifice",
+   "icon": "ability_hunter_fervor",
+   "cooldown": 120,
+   "charges": 1,
+   "duration": 10
+  },
+  "55233": {
+   "id": 55233,
+   "name": "Vampiric Blood",
+   "icon": "spell_shadow_lifedrain",
+   "cooldown": 90,
+   "charges": 1,
+   "duration": 10
+  },
+  "55342": {
+   "id": 55342,
+   "name": "Mirror Image",
+   "icon": "spell_magic_lesserinvisibilty",
+   "cooldown": 120,
+   "charges": 1,
+   "duration": 15
+  },
+  "61336": {
+   "id": 61336,
+   "name": "Survival Instincts",
+   "icon": "ability_druid_tigersroar",
+   "cooldown": 180,
+   "charges": 1,
+   "duration": 6
+  },
+  "62618": {
+   "id": 62618,
+   "name": "Power Word: Barrier",
+   "icon": "spell_holy_powerwordbarrier",
+   "cooldown": 180,
+   "charges": 1,
+   "duration": 10
+  },
+  "86659": {
+   "id": 86659,
+   "name": "Guardian of Ancient Kings",
+   "icon": "spell_holy_heroism",
+   "cooldown": 180,
+   "charges": 1,
+   "duration": 8
+  },
+  "97462": {
+   "id": 97462,
+   "name": "Rallying Cry",
+   "icon": "ability_warrior_rallyingcry",
+   "cooldown": 180,
+   "charges": 1,
+   "duration": 10
+  },
+  "98008": {
+   "id": 98008,
+   "name": "Spirit Link Totem",
+   "icon": "spell_shaman_spiritlink",
+   "cooldown": 180,
+   "charges": 1,
+   "duration": 6
+  },
+  "102342": {
+   "id": 102342,
+   "name": "Ironbark",
+   "icon": "spell_druid_ironbark",
+   "cooldown": 90,
+   "charges": 1,
+   "duration": 12
+  },
+  "104773": {
+   "id": 104773,
+   "name": "Unending Resolve",
+   "icon": "spell_shadow_demonictactics",
+   "cooldown": 180,
+   "charges": 1,
+   "duration": 8
+  },
+  "108271": {
+   "id": 108271,
+   "name": "Astral Shift",
+   "icon": "ability_shaman_astralshift",
+   "cooldown": 120,
+   "charges": 1,
+   "duration": 12
+  },
+  "108416": {
+   "id": 108416,
+   "name": "Dark Pact",
+   "icon": "spell_shadow_deathpact",
+   "cooldown": 60,
+   "charges": 1,
+   "duration": 20
+  },
+  "109304": {
+   "id": 109304,
+   "name": "Exhilaration",
+   "icon": "ability_hunter_onewithnature",
+   "cooldown": 120,
+   "charges": 1,
+   "duration": 0
+  },
+  "110959": {
+   "id": 110959,
+   "name": "Greater Invisibility",
+   "icon": "ability_mage_greaterinvisibility",
+   "cooldown": 120,
+   "charges": 1,
+   "duration": 20
+  },
+  "115203": {
+   "id": 115203,
+   "name": "Fortifying Brew",
+   "icon": "ability_monk_fortifyingale_new",
+   "cooldown": 360,
+   "charges": 1,
+   "duration": 15
+  },
+  "116849": {
+   "id": 116849,
+   "name": "Life Cocoon",
+   "icon": "ability_monk_chicocoon",
+   "cooldown": 120,
+   "charges": 1,
+   "duration": 12
+  },
+  "118038": {
+   "id": 118038,
+   "name": "Die by the Sword",
+   "icon": "ability_warrior_challange",
+   "cooldown": 120,
+   "charges": 1,
+   "duration": 8
+  },
+  "122470": {
+   "id": 122470,
+   "name": "Touch of Karma",
+   "icon": "ability_monk_touchofkarma",
+   "cooldown": 90,
+   "charges": 1,
+   "duration": 10
+  },
+  "184364": {
+   "id": 184364,
+   "name": "Enraged Regeneration",
+   "icon": "ability_warrior_focusedrage",
+   "cooldown": 120,
+   "charges": 1,
+   "duration": 8
+  },
+  "185311": {
+   "id": 185311,
+   "name": "Crimson Vial",
+   "icon": "ability_rogue_crimsonvial",
+   "cooldown": 30,
+   "charges": 1,
+   "duration": 4
+  },
+  "186265": {
+   "id": 186265,
+   "name": "Aspect of the Turtle",
+   "icon": "ability_hunter_pet_turtle",
+   "cooldown": 180,
+   "charges": 1,
+   "duration": 8
+  },
+  "187827": {
+   "id": 187827,
+   "name": "Metamorphosis",
+   "icon": "ability_demonhunter_metamorphasistank",
+   "cooldown": 120,
+   "charges": 1,
+   "duration": 15
+  },
+  "196718": {
+   "id": 196718,
+   "name": "Darkness",
+   "icon": "ability_demonhunter_darkness",
+   "cooldown": 300,
+   "charges": 1,
+   "duration": 8
+  },
+  "198589": {
+   "id": 198589,
+   "name": "Blur",
+   "icon": "ability_demonhunter_blur",
+   "cooldown": 60,
+   "charges": 1,
+   "duration": 10
+  },
+  "204018": {
+   "id": 204018,
+   "name": "Blessing of Spellwarding",
+   "icon": "spell_holy_blessingofprotection",
+   "cooldown": 300,
+   "charges": 1,
+   "duration": 10
+  },
+  "204021": {
+   "id": 204021,
+   "name": "Fiery Brand",
+   "icon": "ability_demonhunter_fierybrand",
+   "cooldown": 60,
+   "charges": 1,
+   "duration": 0
+  },
+  "212641": {
+   "id": 212641,
+   "name": "Guardian of Ancient Kings",
+   "icon": "spell_holy_heroism",
+   "cooldown": 180,
+   "charges": 1,
+   "duration": 8
+  },
+  "235313": {
+   "id": 235313,
+   "name": "Blazing Barrier",
+   "icon": "ability_mage_moltenarmor",
+   "cooldown": 30,
+   "charges": 1,
+   "duration": 60
+  },
+  "235450": {
+   "id": 235450,
+   "name": "Prismatic Barrier",
+   "icon": "spell_magearmor",
+   "cooldown": 30,
+   "charges": 1,
+   "duration": 60
+  },
+  "264735": {
+   "id": 264735,
+   "name": "Survival of the Fittest",
+   "icon": "spell_nature_spiritarmor",
+   "cooldown": 90,
+   "charges": 1,
+   "duration": 6
+  },
+  "322507": {
+   "id": 322507,
+   "name": "Celestial Brew",
+   "icon": "ability_monk_ironskinbrew",
+   "cooldown": 90,
+   "charges": 1,
+   "duration": 8
+  },
+  "342245": {
+   "id": 342245,
+   "name": "Alter Time",
+   "icon": "spell_mage_altertime",
+   "cooldown": 60,
+   "charges": 1,
+   "duration": 10
+  },
+  "357170": {
+   "id": 357170,
+   "name": "Time Dilation",
+   "icon": "ability_evoker_timedilation",
+   "cooldown": 60,
+   "charges": 1,
+   "duration": 8
+  },
+  "363534": {
+   "id": 363534,
+   "name": "Rewind",
+   "icon": "ability_evoker_rewind",
+   "cooldown": 240,
+   "charges": 1,
+   "duration": 4
+  },
+  "363916": {
+   "id": 363916,
+   "name": "Obsidian Scales",
+   "icon": "inv_artifact_dragonscales",
+   "cooldown": 90,
+   "charges": 1,
+   "duration": 12
+  },
+  "374227": {
+   "id": 374227,
+   "name": "Zephyr",
+   "icon": "ability_evoker_hoverblack",
+   "cooldown": 120,
+   "charges": 1,
+   "duration": 8
+  },
+  "403876": {
+   "id": 403876,
+   "name": "Divine Protection",
+   "icon": "spell_holy_divineprotection",
+   "cooldown": 60,
+   "charges": 1,
+   "duration": 8
+  },
+  "414658": {
+   "id": 414658,
+   "name": "Ice Cold",
+   "icon": "spell_fire_bluefire",
+   "cooldown": 240,
+   "charges": 1,
+   "duration": 6
+  },
+  "452930": {
+   "id": 452930,
+   "name": "Demonic Healthstone",
+   "icon": "warlock_-bloodstone",
+   "cooldown": 60,
+   "charges": 1,
+   "duration": 0
+  },
+  "471195": {
+   "id": 471195,
+   "name": "Lay on Hands",
+   "icon": "spell_holy_layonhands",
+   "cooldown": 600,
+   "charges": 1,
+   "duration": 30
+  },
+  "1234768": {
+   "id": 1234768,
+   "name": "Silvermoon Health Potion",
+   "icon": "inv_potion_49",
+   "cooldown": 300,
+   "charges": 1,
+   "duration": 0
+  },
+  "1241059": {
+   "id": 1241059,
+   "name": "Celestial Infusion",
+   "icon": "ability_monk_tigereyebrandy",
+   "cooldown": 90,
+   "charges": 1,
+   "duration": 16
+  },
+  "1262857": {
+   "id": 1262857,
+   "name": "Potent Healing Potion",
+   "icon": "inv_alchemy_80_potion01red",
+   "cooldown": 300,
+   "charges": 1,
+   "duration": 0
+  },
+  "1295247": {
+   "id": 1295247,
+   "name": "Concentrated Silvermoon Health Potion",
+   "icon": "inv_potion_49",
+   "cooldown": 300,
+   "charges": 1,
+   "duration": 0
+  }
+ },
+ "defensives": [
+  {
+   "key": "DeathKnight:48707",
+   "className": "DeathKnight",
+   "specs": [
+    250,
+    251,
+    252
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 48707,
+     "base": true,
+     "mods": [
+      {
+       "talent": 205727,
+       "name": "Anti-Magic Barrier",
+       "cooldownDelta": -20,
+       "chargesDelta": 0,
+       "gate": {
+        "250": {
+         "entries": [
+          96174
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "251": {
+         "entries": [
+          96174
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "252": {
+         "entries": [
+          96174
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      },
+      {
+       "talent": 457574,
+       "name": "Unyielding Will",
+       "cooldownDelta": 18,
+       "chargesDelta": 0,
+       "gate": {
+        "250": {
+         "entries": [
+          96178
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "251": {
+         "entries": [
+          96178
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "252": {
+         "entries": [
+          96178
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "DeathKnight:48792",
+   "className": "DeathKnight",
+   "specs": [
+    250,
+    251,
+    252
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 48792,
+     "base": true,
+     "gate": {
+      "250": {
+       "entries": [
+        96210
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "251": {
+       "entries": [
+        96210
+       ],
+       "free": true,
+       "maxRanks": 1
+      },
+      "252": {
+       "entries": [
+        96210
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     }
+    }
+   ]
+  },
+  {
+   "key": "DeathKnight:49039",
+   "className": "DeathKnight",
+   "specs": [
+    250,
+    251,
+    252
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 49039,
+     "base": true,
+     "mods": [
+      {
+       "talent": 389682,
+       "name": "Unholy Endurance",
+       "cooldownDelta": -30,
+       "chargesDelta": 0,
+       "gate": {
+        "250": {
+         "entries": [
+          96187
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "251": {
+         "entries": [
+          96187
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "252": {
+         "entries": [
+          96187
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      },
+      {
+       "talent": 437122,
+       "name": "Death's Messenger",
+       "cooldownDelta": -30,
+       "chargesDelta": 0,
+       "gate": {
+        "250": {
+         "entries": [
+          117646
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "251": {
+         "entries": [
+          117646
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "DeathKnight:48743",
+   "className": "DeathKnight",
+   "specs": [
+    250,
+    251,
+    252
+   ],
+   "category": "personal",
+   "durationOverride": 0,
+   "options": [
+    {
+     "spell": 48743,
+     "base": true,
+     "gate": {
+      "250": {
+       "entries": [
+        96204
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "251": {
+       "entries": [
+        96204
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "252": {
+       "entries": [
+        96204
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 1266818,
+       "name": "Death Defiance",
+       "cooldownDelta": -30,
+       "chargesDelta": 0,
+       "gate": {
+        "250": {
+         "entries": [
+          136525
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "251": {
+         "entries": [
+          136525
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "252": {
+         "entries": [
+          136525
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "DeathKnight:55233",
+   "className": "DeathKnight",
+   "specs": [
+    250
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 55233,
+     "base": true,
+     "gate": {
+      "250": {
+       "entries": [
+        96308
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     }
+    }
+   ]
+  },
+  {
+   "key": "DeathKnight:49028",
+   "className": "DeathKnight",
+   "specs": [
+    250
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 49028,
+     "base": true,
+     "gate": {
+      "250": {
+       "entries": [
+        96269
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 377637,
+       "name": "Insatiable Blade",
+       "cooldownDelta": -30,
+       "chargesDelta": 0,
+       "gate": {
+        "250": {
+         "entries": [
+          96260
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "DeathKnight:51052",
+   "className": "DeathKnight",
+   "specs": [
+    250,
+    251,
+    252
+   ],
+   "category": "raid",
+   "options": [
+    {
+     "spell": 51052,
+     "base": true,
+     "gate": {
+      "250": {
+       "entries": [
+        96194
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "251": {
+       "entries": [
+        96194
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "252": {
+       "entries": [
+        96194
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 374383,
+       "name": "Assimilation",
+       "cooldownDelta": -60,
+       "chargesDelta": 0,
+       "gate": {
+        "250": {
+         "entries": [
+          96176
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "251": {
+         "entries": [
+          96176
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "252": {
+         "entries": [
+          96176
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "DemonHunter:198589",
+   "className": "DemonHunter",
+   "specs": [
+    577,
+    1480
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 198589,
+     "base": true,
+     "mods": [
+      {
+       "talent": 1266307,
+       "name": "Demonic Resilience",
+       "cooldownDelta": 0,
+       "chargesDelta": 1,
+       "gate": {
+        "577": {
+         "entries": [
+          117755
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "1480": {
+         "entries": [
+          117755
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "DemonHunter:204021",
+   "className": "DemonHunter",
+   "specs": [
+    581
+   ],
+   "category": "personal",
+   "durationOverride": 12,
+   "options": [
+    {
+     "spell": 204021,
+     "base": true,
+     "gate": {
+      "581": {
+       "entries": [
+        112864
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 389732,
+       "name": "Down in Flames",
+       "cooldownDelta": -12,
+       "chargesDelta": 1,
+       "gate": {
+        "581": {
+         "entries": [
+          112876
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "DemonHunter:187827",
+   "className": "DemonHunter",
+   "specs": [
+    581
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 187827,
+     "base": true
+    }
+   ]
+  },
+  {
+   "key": "DemonHunter:196718",
+   "className": "DemonHunter",
+   "specs": [
+    577,
+    581,
+    1480
+   ],
+   "category": "raid",
+   "options": [
+    {
+     "spell": 196718,
+     "base": true,
+     "gate": {
+      "577": {
+       "entries": [
+        112921
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "581": {
+       "entries": [
+        112921
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "1480": {
+       "entries": [
+        112921
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 389783,
+       "name": "Pitch Black",
+       "cooldownDelta": -120,
+       "chargesDelta": 0,
+       "gate": {
+        "577": {
+         "entries": [
+          112919
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "581": {
+         "entries": [
+          112919
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "1480": {
+         "entries": [
+          112919
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Druid:22812",
+   "className": "Druid",
+   "specs": [
+    102,
+    103,
+    104,
+    105
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 22812,
+     "base": true,
+     "mods": [
+      {
+       "talent": 203965,
+       "name": "Survival of the Fittest",
+       "cooldownDelta": -7,
+       "chargesDelta": 0,
+       "gate": {
+        "104": {
+         "entries": [
+          103210
+         ],
+         "free": false,
+         "maxRanks": 2
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Druid:22842",
+   "className": "Druid",
+   "specs": [
+    102,
+    103,
+    104,
+    105
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 22842,
+     "base": true,
+     "gate": {
+      "102": {
+       "entries": [
+        103298
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "103": {
+       "entries": [
+        103298
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "104": {
+       "entries": [
+        103298
+       ],
+       "free": true,
+       "maxRanks": 1
+      },
+      "105": {
+       "entries": [
+        103298
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 377811,
+       "name": "Innate Resolve",
+       "cooldownDelta": 0,
+       "chargesDelta": 1,
+       "gate": {
+        "104": {
+         "entries": [
+          103229
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Druid:61336",
+   "className": "Druid",
+   "specs": [
+    103,
+    104
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 61336,
+     "base": true,
+     "gate": {
+      "103": {
+       "entries": [
+        103180
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "104": {
+       "entries": [
+        103193
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 203965,
+       "name": "Survival of the Fittest",
+       "cooldownDelta": -24,
+       "chargesDelta": 0,
+       "gate": {
+        "104": {
+         "entries": [
+          103210
+         ],
+         "free": false,
+         "maxRanks": 2
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Druid:102342",
+   "className": "Druid",
+   "specs": [
+    105
+   ],
+   "category": "external",
+   "options": [
+    {
+     "spell": 102342,
+     "base": true,
+     "gate": {
+      "105": {
+       "entries": [
+        103141
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 382552,
+       "name": "Improved Ironbark",
+       "cooldownDelta": -18,
+       "chargesDelta": 0,
+       "gate": {
+        "105": {
+         "entries": [
+          103139
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Evoker:363916",
+   "className": "Evoker",
+   "specs": [
+    1467,
+    1468,
+    1473
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 363916,
+     "base": true,
+     "gate": {
+      "1467": {
+       "entries": [
+        115613
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "1468": {
+       "entries": [
+        115613
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "1473": {
+       "entries": [
+        115613
+       ],
+       "free": true,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 375406,
+       "name": "Obsidian Bulwark",
+       "cooldownDelta": 0,
+       "chargesDelta": 1,
+       "gate": {
+        "1467": {
+         "entries": [
+          115597
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "1468": {
+         "entries": [
+          115597
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "1473": {
+         "entries": [
+          115597
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      },
+      {
+       "talent": 412713,
+       "name": "Interwoven Threads",
+       "cooldownDelta": -6,
+       "chargesDelta": 0,
+       "gate": {
+        "1473": {
+         "entries": [
+          115686
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Evoker:357170",
+   "className": "Evoker",
+   "specs": [
+    1468
+   ],
+   "category": "external",
+   "options": [
+    {
+     "spell": 357170,
+     "base": true,
+     "gate": {
+      "1468": {
+       "entries": [
+        115650
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 376204,
+       "name": "Just in Time",
+       "cooldownDelta": -10,
+       "chargesDelta": 1,
+       "gate": {
+        "1468": {
+         "entries": [
+          115648
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Evoker:374227",
+   "className": "Evoker",
+   "specs": [
+    1467,
+    1468,
+    1473
+   ],
+   "category": "raid",
+   "options": [
+    {
+     "spell": 374227,
+     "base": true,
+     "gate": {
+      "1467": {
+       "entries": [
+        115661
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "1468": {
+       "entries": [
+        115661
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "1473": {
+       "entries": [
+        115661
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     }
+    }
+   ]
+  },
+  {
+   "key": "Evoker:363534",
+   "className": "Evoker",
+   "specs": [
+    1468
+   ],
+   "category": "raid",
+   "options": [
+    {
+     "spell": 363534,
+     "base": true,
+     "gate": {
+      "1468": {
+       "entries": [
+        115651
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 381922,
+       "name": "Temporal Artificer",
+       "cooldownDelta": -60,
+       "chargesDelta": 0,
+       "gate": {
+        "1468": {
+         "entries": [
+          115570
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Hunter:186265",
+   "className": "Hunter",
+   "specs": [
+    253,
+    254,
+    255
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 186265,
+     "base": true,
+     "mods": [
+      {
+       "talent": 266921,
+       "name": "Born To Be Wild",
+       "cooldownDelta": -12,
+       "chargesDelta": 0,
+       "gate": {
+        "253": {
+         "entries": [
+          126481
+         ],
+         "free": false,
+         "maxRanks": 2
+        },
+        "254": {
+         "entries": [
+          126481
+         ],
+         "free": false,
+         "maxRanks": 2
+        },
+        "255": {
+         "entries": [
+          126481
+         ],
+         "free": false,
+         "maxRanks": 2
+        }
+       }
+      },
+      {
+       "talent": 1258485,
+       "name": "Improved Aspect of the Turtle",
+       "cooldownDelta": -30,
+       "chargesDelta": 0,
+       "gate": {
+        "253": {
+         "entries": [
+          126490
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "254": {
+         "entries": [
+          126490
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "255": {
+         "entries": [
+          126490
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Hunter:109304",
+   "className": "Hunter",
+   "specs": [
+    253,
+    254,
+    255
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 109304,
+     "base": true,
+     "mods": [
+      {
+       "talent": 270581,
+       "name": "Natural Mending",
+       "cooldownDelta": -30,
+       "chargesDelta": 0,
+       "gate": {
+        "253": {
+         "entries": [
+          126465
+         ],
+         "free": false,
+         "maxRanks": 2
+        },
+        "254": {
+         "entries": [
+          126465
+         ],
+         "free": false,
+         "maxRanks": 2
+        },
+        "255": {
+         "entries": [
+          126465
+         ],
+         "free": false,
+         "maxRanks": 2
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Hunter:264735",
+   "className": "Hunter",
+   "specs": [
+    253,
+    254,
+    255
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 264735,
+     "base": true,
+     "gate": {
+      "253": {
+       "entries": [
+        126488
+       ],
+       "free": true,
+       "maxRanks": 1
+      },
+      "254": {
+       "entries": [
+        126488
+       ],
+       "free": true,
+       "maxRanks": 1
+      },
+      "255": {
+       "entries": [
+        126488
+       ],
+       "free": true,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 459450,
+       "name": "Padded Armor",
+       "cooldownDelta": 0,
+       "chargesDelta": 1,
+       "gate": {
+        "253": {
+         "entries": [
+          126470
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "254": {
+         "entries": [
+          126470
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "255": {
+         "entries": [
+          126470
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Hunter:5384",
+   "className": "Hunter",
+   "specs": [
+    253,
+    254,
+    255
+   ],
+   "category": "personal",
+   "durationOverride": 0,
+   "options": [
+    {
+     "spell": 5384,
+     "base": true,
+     "mods": [
+      {
+       "talent": 1258486,
+       "name": "Improved Feign Death",
+       "cooldownDelta": -5,
+       "chargesDelta": 0,
+       "gate": {
+        "253": {
+         "entries": [
+          135706
+         ],
+         "free": false,
+         "maxRanks": 2
+        },
+        "254": {
+         "entries": [
+          135706
+         ],
+         "free": false,
+         "maxRanks": 2
+        },
+        "255": {
+         "entries": [
+          135706
+         ],
+         "free": false,
+         "maxRanks": 2
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Hunter:53480",
+   "className": "Hunter",
+   "specs": [
+    253,
+    254,
+    255
+   ],
+   "category": "external",
+   "options": [
+    {
+     "spell": 53480,
+     "base": true,
+     "gate": {
+      "253": {
+       "entries": [
+        136686
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "254": {
+       "entries": [
+        136686
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "255": {
+       "entries": [
+        136686
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     }
+    }
+   ]
+  },
+  {
+   "key": "Mage:45438",
+   "className": "Mage",
+   "specs": [
+    62,
+    63,
+    64
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 45438,
+     "base": true,
+     "gate": {
+      "62": {
+       "entries": [
+        80181
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "63": {
+       "entries": [
+        80181
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "64": {
+       "entries": [
+        80181
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 382424,
+       "name": "Winter's Protection",
+       "cooldownDelta": -30,
+       "chargesDelta": 0,
+       "gate": {
+        "62": {
+         "entries": [
+          80182
+         ],
+         "free": false,
+         "maxRanks": 2
+        },
+        "63": {
+         "entries": [
+          80182
+         ],
+         "free": false,
+         "maxRanks": 2
+        },
+        "64": {
+         "entries": [
+          80182
+         ],
+         "free": false,
+         "maxRanks": 2
+        }
+       }
+      },
+      {
+       "talent": 1244110,
+       "name": "Glacial Bulwark",
+       "cooldownDelta": -30,
+       "chargesDelta": 1,
+       "gate": {
+        "64": {
+         "entries": [
+          134180
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      },
+      {
+       "talent": 1265517,
+       "name": "Permafrost Bauble",
+       "cooldownDelta": -30,
+       "chargesDelta": 0,
+       "gate": {
+        "62": {
+         "entries": [
+          80142
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "63": {
+         "entries": [
+          80142
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "64": {
+         "entries": [
+          80142
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    },
+    {
+     "spell": 414658,
+     "base": false,
+     "gate": {
+      "62": {
+       "entries": [
+        80141
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "63": {
+       "entries": [
+        80141
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "64": {
+       "entries": [
+        80141
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 382424,
+       "name": "Winter's Protection",
+       "cooldownDelta": -30,
+       "chargesDelta": 0,
+       "gate": {
+        "62": {
+         "entries": [
+          80182
+         ],
+         "free": false,
+         "maxRanks": 2
+        },
+        "63": {
+         "entries": [
+          80182
+         ],
+         "free": false,
+         "maxRanks": 2
+        },
+        "64": {
+         "entries": [
+          80182
+         ],
+         "free": false,
+         "maxRanks": 2
+        }
+       }
+      },
+      {
+       "talent": 1244110,
+       "name": "Glacial Bulwark",
+       "cooldownDelta": -30,
+       "chargesDelta": 1,
+       "gate": {
+        "64": {
+         "entries": [
+          134180
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      },
+      {
+       "talent": 1265517,
+       "name": "Permafrost Bauble",
+       "cooldownDelta": -30,
+       "chargesDelta": 0,
+       "gate": {
+        "62": {
+         "entries": [
+          80142
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "63": {
+         "entries": [
+          80142
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "64": {
+         "entries": [
+          80142
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Mage:235450",
+   "className": "Mage",
+   "specs": [
+    62
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 235450,
+     "base": true,
+     "gate": {
+      "62": {
+       "entries": [
+        80180
+       ],
+       "free": true,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 321745,
+       "name": "Improved Prismatic Barrier",
+       "cooldownDelta": 0,
+       "chargesDelta": 1,
+       "gate": {
+        "62": {
+         "entries": [
+          134194
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Mage:235313",
+   "className": "Mage",
+   "specs": [
+    63
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 235313,
+     "base": true,
+     "gate": {
+      "63": {
+       "entries": [
+        80178
+       ],
+       "free": true,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 321708,
+       "name": "Improved Blazing Barrier",
+       "cooldownDelta": 0,
+       "chargesDelta": 1,
+       "gate": {
+        "63": {
+         "entries": [
+          134186
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Mage:11426",
+   "className": "Mage",
+   "specs": [
+    64
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 11426,
+     "base": true,
+     "gate": {
+      "64": {
+       "entries": [
+        80176
+       ],
+       "free": true,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 1244069,
+       "name": "Improved Ice Barrier",
+       "cooldownDelta": 0,
+       "chargesDelta": 1,
+       "gate": {
+        "64": {
+         "entries": [
+          134185
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Mage:55342",
+   "className": "Mage",
+   "specs": [
+    62,
+    63,
+    64
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 55342,
+     "base": true,
+     "gate": {
+      "62": {
+       "entries": [
+        80183
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "63": {
+       "entries": [
+        80183
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "64": {
+       "entries": [
+        80183
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 1244025,
+       "name": "Improved Conjuration",
+       "cooldownDelta": -30,
+       "chargesDelta": 0,
+       "gate": {
+        "62": {
+         "entries": [
+          134192
+         ],
+         "free": false,
+         "maxRanks": 2
+        },
+        "63": {
+         "entries": [
+          134192
+         ],
+         "free": false,
+         "maxRanks": 2
+        },
+        "64": {
+         "entries": [
+          134192
+         ],
+         "free": false,
+         "maxRanks": 2
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Mage:110959",
+   "className": "Mage",
+   "specs": [
+    62,
+    63,
+    64
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 110959,
+     "base": true,
+     "gate": {
+      "62": {
+       "entries": [
+        115877
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "63": {
+       "entries": [
+        115877
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "64": {
+       "entries": [
+        115877
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 210476,
+       "name": "Master of Escape",
+       "cooldownDelta": -60,
+       "chargesDelta": 0,
+       "gate": {
+        "62": {
+         "entries": [
+          134189
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "63": {
+         "entries": [
+          134189
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "64": {
+         "entries": [
+          134189
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Mage:342245",
+   "className": "Mage",
+   "specs": [
+    62,
+    63,
+    64
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 342245,
+     "base": true,
+     "gate": {
+      "62": {
+       "entries": [
+        80174
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "63": {
+       "entries": [
+        80174
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "64": {
+       "entries": [
+        80174
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     }
+    }
+   ]
+  },
+  {
+   "key": "Monk:115203",
+   "className": "Monk",
+   "specs": [
+    268,
+    269,
+    270
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 115203,
+     "base": true,
+     "gate": {
+      "268": {
+       "entries": [
+        124968
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "269": {
+       "entries": [
+        124968
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "270": {
+       "entries": [
+        124968
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 388813,
+       "name": "Expeditious Fortification",
+       "cooldownDelta": -30,
+       "chargesDelta": 0,
+       "gate": {
+        "268": {
+         "entries": [
+          124969
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "269": {
+         "entries": [
+          124969
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "270": {
+         "entries": [
+          124969
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Monk:1241059",
+   "className": "Monk",
+   "specs": [
+    268
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 1241059,
+     "base": true,
+     "gate": {
+      "268": {
+       "entries": [
+        136146
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 325093,
+       "name": "Light Brewing",
+       "cooldownDelta": -18,
+       "chargesDelta": 0,
+       "gate": {
+        "268": {
+         "entries": [
+          124858
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      },
+      {
+       "talent": 450892,
+       "name": "Endless Draught",
+       "cooldownDelta": 0,
+       "chargesDelta": 1,
+       "gate": {
+        "268": {
+         "entries": [
+          125036
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Monk:322507",
+   "className": "Monk",
+   "specs": [
+    268
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 322507,
+     "base": true,
+     "gate": {
+      "268": {
+       "entries": [
+        124841
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 325093,
+       "name": "Light Brewing",
+       "cooldownDelta": -18,
+       "chargesDelta": 0,
+       "gate": {
+        "268": {
+         "entries": [
+          124858
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      },
+      {
+       "talent": 450892,
+       "name": "Endless Draught",
+       "cooldownDelta": 0,
+       "chargesDelta": 1,
+       "gate": {
+        "268": {
+         "entries": [
+          125036
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Monk:122470",
+   "className": "Monk",
+   "specs": [
+    269
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 122470,
+     "base": true
+    }
+   ]
+  },
+  {
+   "key": "Monk:116849",
+   "className": "Monk",
+   "specs": [
+    270
+   ],
+   "category": "external",
+   "options": [
+    {
+     "spell": 116849,
+     "base": true,
+     "gate": {
+      "270": {
+       "entries": [
+        124875
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 202424,
+       "name": "Chrysalis",
+       "cooldownDelta": -42,
+       "chargesDelta": 0,
+       "gate": {
+        "270": {
+         "entries": [
+          124878
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Paladin:642",
+   "className": "Paladin",
+   "specs": [
+    65,
+    66,
+    70
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 642,
+     "base": true,
+     "mods": [
+      {
+       "talent": 114154,
+       "name": "Unbreakable Spirit",
+       "cooldownDelta": -90,
+       "chargesDelta": 0,
+       "gate": {
+        "65": {
+         "entries": [
+          102603
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "66": {
+         "entries": [
+          102603
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "70": {
+         "entries": [
+          102603
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      },
+      {
+       "talent": 378425,
+       "name": "Uther's Counsel",
+       "cooldownDelta": -42,
+       "chargesDelta": 0,
+       "gate": {
+        "66": {
+         "entries": [
+          137857
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Paladin:498",
+   "className": "Paladin",
+   "specs": [
+    65
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 498,
+     "base": true,
+     "mods": [
+      {
+       "talent": 114154,
+       "name": "Unbreakable Spirit",
+       "cooldownDelta": -18,
+       "chargesDelta": 0,
+       "gate": {
+        "65": {
+         "entries": [
+          102603
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Paladin:403876",
+   "className": "Paladin",
+   "specs": [
+    70
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 403876,
+     "base": true,
+     "mods": [
+      {
+       "talent": 114154,
+       "name": "Unbreakable Spirit",
+       "cooldownDelta": -18,
+       "chargesDelta": 0,
+       "gate": {
+        "70": {
+         "entries": [
+          102603
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Paladin:31850",
+   "className": "Paladin",
+   "specs": [
+    66
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 31850,
+     "base": true,
+     "gate": {
+      "66": {
+       "entries": [
+        102445
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 114154,
+       "name": "Unbreakable Spirit",
+       "cooldownDelta": -24,
+       "chargesDelta": 0,
+       "gate": {
+        "66": {
+         "entries": [
+          102603
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Paladin:86659",
+   "className": "Paladin",
+   "specs": [
+    66
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 86659,
+     "base": true,
+     "gate": {
+      "66": {
+       "entries": [
+        102456
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 1246481,
+       "name": "Empyrean Authority",
+       "cooldownDelta": 0,
+       "chargesDelta": 1,
+       "gate": {
+        "66": {
+         "entries": [
+          128278
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    },
+    {
+     "spell": 212641,
+     "base": false,
+     "castOnly": true,
+     "mods": [
+      {
+       "talent": 1246481,
+       "name": "Empyrean Authority",
+       "cooldownDelta": 0,
+       "chargesDelta": 1,
+       "gate": {
+        "66": {
+         "entries": [
+          128278
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Paladin:633",
+   "className": "Paladin",
+   "specs": [
+    65,
+    66,
+    70
+   ],
+   "category": "external",
+   "durationOverride": 0,
+   "options": [
+    {
+     "spell": 633,
+     "base": true,
+     "gate": {
+      "65": {
+       "entries": [
+        102583
+       ],
+       "free": true,
+       "maxRanks": 1
+      },
+      "66": {
+       "entries": [
+        102583
+       ],
+       "free": true,
+       "maxRanks": 1
+      },
+      "70": {
+       "entries": [
+        102583
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 114154,
+       "name": "Unbreakable Spirit",
+       "cooldownDelta": -180,
+       "chargesDelta": 0,
+       "gate": {
+        "65": {
+         "entries": [
+          102603
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "66": {
+         "entries": [
+          102603
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "70": {
+         "entries": [
+          102603
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      },
+      {
+       "talent": 378425,
+       "name": "Uther's Counsel",
+       "cooldownDelta": -90,
+       "chargesDelta": 0,
+       "gate": {
+        "66": {
+         "entries": [
+          137857
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      },
+      {
+       "talent": 414720,
+       "name": "Tirion's Devotion",
+       "cooldownDelta": -240,
+       "chargesDelta": 0,
+       "gate": {
+        "65": {
+         "entries": [
+          102556
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    },
+    {
+     "spell": 471195,
+     "base": false,
+     "castOnly": true,
+     "mods": [
+      {
+       "talent": 114154,
+       "name": "Unbreakable Spirit",
+       "cooldownDelta": -180,
+       "chargesDelta": 0,
+       "gate": {
+        "65": {
+         "entries": [
+          102603
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "66": {
+         "entries": [
+          102603
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "70": {
+         "entries": [
+          102603
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      },
+      {
+       "talent": 378425,
+       "name": "Uther's Counsel",
+       "cooldownDelta": -90,
+       "chargesDelta": 0,
+       "gate": {
+        "66": {
+         "entries": [
+          137857
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      },
+      {
+       "talent": 414720,
+       "name": "Tirion's Devotion",
+       "cooldownDelta": -240,
+       "chargesDelta": 0,
+       "gate": {
+        "65": {
+         "entries": [
+          102556
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Paladin:6940",
+   "className": "Paladin",
+   "specs": [
+    65,
+    66,
+    70
+   ],
+   "category": "external",
+   "options": [
+    {
+     "spell": 6940,
+     "base": true,
+     "gate": {
+      "65": {
+       "entries": [
+        102602
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "66": {
+       "entries": [
+        102602
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "70": {
+       "entries": [
+        102602
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 384820,
+       "name": "Sacrifice of the Just",
+       "cooldownDelta": -60,
+       "chargesDelta": 0,
+       "gate": {
+        "65": {
+         "entries": [
+          102595
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "66": {
+         "entries": [
+          102595
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "70": {
+         "entries": [
+          102595
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Paladin:1022",
+   "className": "Paladin",
+   "specs": [
+    65,
+    66,
+    70
+   ],
+   "category": "external",
+   "options": [
+    {
+     "spell": 1022,
+     "base": true,
+     "gate": {
+      "65": {
+       "entries": [
+        102604
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "66": {
+       "entries": [
+        102604
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "70": {
+       "entries": [
+        102604
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 378425,
+       "name": "Uther's Counsel",
+       "cooldownDelta": -42,
+       "chargesDelta": 0,
+       "gate": {
+        "66": {
+         "entries": [
+          137857
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      },
+      {
+       "talent": 384909,
+       "name": "Improved Blessing of Protection",
+       "cooldownDelta": -60,
+       "chargesDelta": 0,
+       "gate": {
+        "65": {
+         "entries": [
+          102606
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "66": {
+         "entries": [
+          102606
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "70": {
+         "entries": [
+          102606
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Paladin:204018",
+   "className": "Paladin",
+   "specs": [
+    66
+   ],
+   "category": "external",
+   "options": [
+    {
+     "spell": 204018,
+     "base": true,
+     "gate": {
+      "66": {
+       "entries": [
+        111886
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 378425,
+       "name": "Uther's Counsel",
+       "cooldownDelta": -42,
+       "chargesDelta": 0,
+       "gate": {
+        "66": {
+         "entries": [
+          137857
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      },
+      {
+       "talent": 384909,
+       "name": "Improved Blessing of Protection",
+       "cooldownDelta": -60,
+       "chargesDelta": 0,
+       "gate": {
+        "66": {
+         "entries": [
+          102606
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Paladin:31821",
+   "className": "Paladin",
+   "specs": [
+    65
+   ],
+   "category": "raid",
+   "options": [
+    {
+     "spell": 31821,
+     "base": true,
+     "gate": {
+      "65": {
+       "entries": [
+        102548
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 392911,
+       "name": "Unwavering Spirit",
+       "cooldownDelta": -30,
+       "chargesDelta": 0,
+       "gate": {
+        "65": {
+         "entries": [
+          102547
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Priest:19236",
+   "className": "Priest",
+   "specs": [
+    256,
+    257,
+    258
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 19236,
+     "base": true,
+     "gate": {
+      "256": {
+       "entries": [
+        134846
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "257": {
+       "entries": [
+        134846
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "258": {
+       "entries": [
+        134846
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     }
+    }
+   ]
+  },
+  {
+   "key": "Priest:586",
+   "className": "Priest",
+   "specs": [
+    256,
+    257,
+    258
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 586,
+     "base": true,
+     "gate": {
+      "256": {
+       "entries": [
+        134849
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "257": {
+       "entries": [
+        134849
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "258": {
+       "entries": [
+        134849
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 390670,
+       "name": "Improved Fade",
+       "cooldownDelta": -5,
+       "chargesDelta": 0,
+       "gate": {
+        "256": {
+         "entries": [
+          103836
+         ],
+         "free": false,
+         "maxRanks": 2
+        },
+        "257": {
+         "entries": [
+          103836
+         ],
+         "free": false,
+         "maxRanks": 2
+        },
+        "258": {
+         "entries": [
+          103836
+         ],
+         "free": false,
+         "maxRanks": 2
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Priest:47585",
+   "className": "Priest",
+   "specs": [
+    258
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 47585,
+     "base": true,
+     "mods": [
+      {
+       "talent": 288733,
+       "name": "Intangibility",
+       "cooldownDelta": -30,
+       "chargesDelta": 0,
+       "gate": {
+        "258": {
+         "entries": [
+          134850
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Priest:33206",
+   "className": "Priest",
+   "specs": [
+    256
+   ],
+   "category": "external",
+   "options": [
+    {
+     "spell": 33206,
+     "base": true,
+     "gate": {
+      "256": {
+       "entries": [
+        103713
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 373035,
+       "name": "Protector of the Frail",
+       "cooldownDelta": 0,
+       "chargesDelta": 1,
+       "gate": {
+        "256": {
+         "entries": [
+          103714
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Priest:47788",
+   "className": "Priest",
+   "specs": [
+    257
+   ],
+   "category": "external",
+   "options": [
+    {
+     "spell": 47788,
+     "base": true,
+     "gate": {
+      "257": {
+       "entries": [
+        103774
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     }
+    }
+   ]
+  },
+  {
+   "key": "Priest:62618",
+   "className": "Priest",
+   "specs": [
+    256
+   ],
+   "category": "raid",
+   "options": [
+    {
+     "spell": 62618,
+     "base": true,
+     "gate": {
+      "256": {
+       "entries": [
+        103687
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     }
+    }
+   ]
+  },
+  {
+   "key": "Priest:15286",
+   "className": "Priest",
+   "specs": [
+    258
+   ],
+   "category": "raid",
+   "options": [
+    {
+     "spell": 15286,
+     "base": true
+    }
+   ]
+  },
+  {
+   "key": "Rogue:31224",
+   "className": "Rogue",
+   "specs": [
+    259,
+    260,
+    261
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 31224,
+     "base": true,
+     "gate": {
+      "259": {
+       "entries": [
+        112585
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "260": {
+       "entries": [
+        112585
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "261": {
+       "entries": [
+        112585
+       ],
+       "free": true,
+       "maxRanks": 1
+      }
+     }
+    }
+   ]
+  },
+  {
+   "key": "Rogue:5277",
+   "className": "Rogue",
+   "specs": [
+    259,
+    260,
+    261
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 5277,
+     "base": true,
+     "gate": {
+      "259": {
+       "entries": [
+        112654
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "260": {
+       "entries": [
+        112654
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "261": {
+       "entries": [
+        112654
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     }
+    }
+   ]
+  },
+  {
+   "key": "Rogue:185311",
+   "className": "Rogue",
+   "specs": [
+    259,
+    260,
+    261
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 185311,
+     "base": true
+    }
+   ]
+  },
+  {
+   "key": "Rogue:1966",
+   "className": "Rogue",
+   "specs": [
+    259,
+    260,
+    261
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 1966,
+     "base": true,
+     "mods": [
+      {
+       "talent": 423647,
+       "name": "Graceful Guile",
+       "cooldownDelta": 0,
+       "chargesDelta": 1,
+       "gate": {
+        "259": {
+         "entries": [
+          112646
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "260": {
+         "entries": [
+          112646
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "261": {
+         "entries": [
+          112646
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Rogue:1856",
+   "className": "Rogue",
+   "specs": [
+    259,
+    260,
+    261
+   ],
+   "category": "personal",
+   "durationOverride": 3,
+   "options": [
+    {
+     "spell": 1856,
+     "base": true,
+     "mods": [
+      {
+       "talent": 382513,
+       "name": "Without a Trace",
+       "cooldownDelta": 0,
+       "chargesDelta": 1,
+       "gate": {
+        "259": {
+         "entries": [
+          125614
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "260": {
+         "entries": [
+          125614
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "261": {
+         "entries": [
+          125614
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Shaman:108271",
+   "className": "Shaman",
+   "specs": [
+    262,
+    263,
+    264
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 108271,
+     "base": true,
+     "gate": {
+      "262": {
+       "entries": [
+        127893
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "263": {
+       "entries": [
+        127893
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "264": {
+       "entries": [
+        127893
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 381647,
+       "name": "Planes Traveler",
+       "cooldownDelta": -30,
+       "chargesDelta": 0,
+       "gate": {
+        "262": {
+         "entries": [
+          127888
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "263": {
+         "entries": [
+          127888
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "264": {
+         "entries": [
+          127888
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Shaman:98008",
+   "className": "Shaman",
+   "specs": [
+    264
+   ],
+   "category": "raid",
+   "options": [
+    {
+     "spell": 98008,
+     "base": true,
+     "gate": {
+      "264": {
+       "entries": [
+        101924
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     }
+    }
+   ]
+  },
+  {
+   "key": "Warlock:104773",
+   "className": "Warlock",
+   "specs": [
+    265,
+    266,
+    267
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 104773,
+     "base": true,
+     "mods": [
+      {
+       "talent": 386659,
+       "name": "Dark Accord",
+       "cooldownDelta": -42,
+       "chargesDelta": 0,
+       "gate": {
+        "265": {
+         "entries": [
+          91467
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "266": {
+         "entries": [
+          91467
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "267": {
+         "entries": [
+          91467
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Warlock:108416",
+   "className": "Warlock",
+   "specs": [
+    265,
+    266,
+    267
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 108416,
+     "base": true,
+     "gate": {
+      "265": {
+       "entries": [
+        91444
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "266": {
+       "entries": [
+        91444
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "267": {
+       "entries": [
+        91444
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     }
+    }
+   ]
+  },
+  {
+   "key": "Warrior:118038",
+   "className": "Warrior",
+   "specs": [
+    71
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 118038,
+     "base": true,
+     "gate": {
+      "71": {
+       "entries": [
+        112121
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 391271,
+       "name": "Honed Reflexes",
+       "cooldownDelta": -12,
+       "chargesDelta": 0,
+       "gate": {
+        "71": {
+         "entries": [
+          118850
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Warrior:184364",
+   "className": "Warrior",
+   "specs": [
+    72
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 184364,
+     "base": true,
+     "gate": {
+      "72": {
+       "entries": [
+        112264
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 391271,
+       "name": "Honed Reflexes",
+       "cooldownDelta": -12,
+       "chargesDelta": 0,
+       "gate": {
+        "72": {
+         "entries": [
+          118850
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Warrior:871",
+   "className": "Warrior",
+   "specs": [
+    73
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 871,
+     "base": true,
+     "gate": {
+      "73": {
+       "entries": [
+        112156
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 391271,
+       "name": "Honed Reflexes",
+       "cooldownDelta": -18,
+       "chargesDelta": 0,
+       "gate": {
+        "73": {
+         "entries": [
+          118850
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      },
+      {
+       "talent": 397103,
+       "name": "Defender's Aegis",
+       "cooldownDelta": -60,
+       "chargesDelta": 1,
+       "gate": {
+        "73": {
+         "entries": [
+          112174
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Warrior:23920",
+   "className": "Warrior",
+   "specs": [
+    71,
+    72,
+    73
+   ],
+   "category": "personal",
+   "options": [
+    {
+     "spell": 23920,
+     "base": true,
+     "gate": {
+      "71": {
+       "entries": [
+        112253
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "72": {
+       "entries": [
+        112253
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "73": {
+       "entries": [
+        112253
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     },
+     "mods": [
+      {
+       "talent": 391271,
+       "name": "Honed Reflexes",
+       "cooldownDelta": -2,
+       "chargesDelta": 0,
+       "gate": {
+        "71": {
+         "entries": [
+          118850
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "72": {
+         "entries": [
+          118850
+         ],
+         "free": false,
+         "maxRanks": 1
+        },
+        "73": {
+         "entries": [
+          118850
+         ],
+         "free": false,
+         "maxRanks": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "Warrior:97462",
+   "className": "Warrior",
+   "specs": [
+    71,
+    72,
+    73
+   ],
+   "category": "raid",
+   "options": [
+    {
+     "spell": 97462,
+     "base": true,
+     "gate": {
+      "71": {
+       "entries": [
+        112188
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "72": {
+       "entries": [
+        112188
+       ],
+       "free": false,
+       "maxRanks": 1
+      },
+      "73": {
+       "entries": [
+        112188
+       ],
+       "free": false,
+       "maxRanks": 1
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "consumables": [
+  {
+   "key": "health-potion",
+   "potions": [
+    {
+     "spell": 1295247,
+     "tiers": [
+      {
+       "itemId": 271883,
+       "heal": 359499,
+       "quality": 1
+      },
+      {
+       "itemId": 271884,
+       "heal": 421200,
+       "quality": 2
+      }
+     ]
+    },
+    {
+     "spell": 1234768,
+     "tiers": [
+      {
+       "itemId": 241305,
+       "heal": 205956,
+       "quality": 1
+      },
+      {
+       "itemId": 241304,
+       "heal": 241304,
+       "quality": 2
+      }
+     ]
+    },
+    {
+     "spell": 1262857,
+     "tiers": []
+    }
+   ]
+  },
+  {
+   "key": "healthstone",
+   "potions": [
+    {
+     "spell": 6262,
+     "tiers": []
+    },
+    {
+     "spell": 452930,
+     "tiers": []
+    }
+   ]
+  }
+ ]
+}

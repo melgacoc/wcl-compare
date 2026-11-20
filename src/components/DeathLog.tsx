@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useLazyQuery } from '@apollo/client/react';
-import { GET_DEATHS, GET_PLAYER_CASTS, GET_DEATH_TIMELINE } from '@/lib/queries';
-import { DEFENSIVE_SPELLS, type DefensiveSpell } from '@/lib/wow-spells';
+import { GET_DEATHS, GET_PLAYER_DEFENSIVE_CONTEXT, GET_DEATH_TIMELINE } from '@/lib/queries';
+import {
+  resolveDefensives, statusAt, consumablesAt, parseTalents, getSpecId, defensiveCastIds,
+  consumableSpellIds, allConsumableSpellIds, spellName, DEFENSIVES_BUILD,
+  type CastEvent, type HealEvent, type DefensiveAtDeath, type ConsumableAtDeath, type DefensiveStatus,
+} from '@/lib/defensives';
 import { LiveFightSelector } from './LiveFightSelector';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -24,14 +28,34 @@ interface DeathEntry {
 }
 
 interface DefensiveAnalysis {
-  classDefensives: {spell: DefensiveSpell, status: 'AVAILABLE' | 'ON_COOLDOWN' | 'ACTIVE'}[];
-  consumables: {spell: DefensiveSpell, status: 'AVAILABLE' | 'ON_COOLDOWN' | 'ACTIVE'}[];
+  classDefensives: DefensiveAtDeath[];
+  consumables: ConsumableAtDeath[];
+  /** false quando o log não trouxe os talentos (CombatantInfo): defensivos de talento são presumidos. */
+  talentsKnown: boolean;
 }
 
-interface CastEvent {
-  timestamp: number;
-  abilityGameID: number;
+const EMPTY_ANALYSIS: DefensiveAnalysis = { classDefensives: [], consumables: [], talentsKnown: true };
+
+interface CombatantInfoEvent {
+  specID?: number;
+  talentTree?: { id: number; rank: number }[];
 }
+
+interface DefensiveContextData {
+  reportData?: {
+    report?: {
+      casts?: { data?: CastEvent[] };
+      combatantInfo?: { data?: CombatantInfoEvent[] };
+      consumableHeals?: { data?: HealEvent[] };
+    };
+  };
+}
+
+const HEAL_FILTER = `ability.id IN (${allConsumableSpellIds().join(',')})`;
+const POTION_IDS = consumableSpellIds('health-potion');
+const HEALTHSTONE_IDS = consumableSpellIds('healthstone');
+
+const formatSeconds = (s: number) => (s >= 60 ? `${Math.floor(s / 60)}m${String(Math.round(s % 60)).padStart(2, '0')}s` : `${Math.ceil(s)}s`);
 
 interface TimelineEvent {
   timestamp: number;
@@ -54,17 +78,12 @@ interface ReportData {
       };
     };
     fights?: { startTime: number }[];
-    events?: { data?: CastEvent[] };
     damageTaken?: { data?: any[] };
     healingReceived?: { data?: any[] };
   };
 }
 
 interface DeathsQueryData {
-  reportData?: ReportData;
-}
-
-interface CastsQueryData {
   reportData?: ReportData;
 }
 
@@ -97,6 +116,97 @@ const fetchIconName = async (spellId: number): Promise<string> => {
   }
 };
 
+type TooltipHandlers = {
+  onMouseEnter: NonNullable<React.ComponentProps<typeof SpellIcon>['onMouseEnter']>;
+  onMouseLeave: () => void;
+};
+
+const statusBox = (status: DefensiveStatus) => ({
+  AVAILABLE: 'bg-red-500/10 border-red-500/30 text-red-200',
+  ON_COOLDOWN: 'bg-zinc-800/50 border-zinc-700/50 text-zinc-500',
+  ACTIVE: 'bg-green-500/10 border-green-500/30 text-green-200',
+}[status]);
+
+function StatusLabel({ status, readyIn }: { status: DefensiveStatus; readyIn?: number }) {
+  if (status === 'AVAILABLE') return <span className="text-red-400">DISPONÍVEL</span>;
+  if (status === 'ACTIVE') return <span className="text-green-400">ATIVO</span>;
+  return <span className="text-zinc-500">CD{readyIn !== undefined ? ` ${formatSeconds(readyIn)}` : ''}</span>;
+}
+
+const CATEGORY_LABEL = { personal: null, external: 'externo', raid: 'raid' } as const;
+
+function DefensiveCard({ d, tooltip }: { d: DefensiveAtDeath; tooltip: TooltipHandlers }) {
+  const details = [
+    `CD ${formatSeconds(d.cooldown)}${d.charges > 1 ? ` · ${d.charges} cargas` : ''}`,
+    ...d.appliedMods.map((m) => `${m.name}${m.rank > 1 ? ` (rank ${m.rank})` : ''}: ${[
+      m.cooldownDelta ? `${m.cooldownDelta > 0 ? '+' : ''}${m.cooldownDelta}s CD` : '',
+      m.chargesDelta ? `+${m.chargesDelta} carga` : '',
+    ].filter(Boolean).join(', ')}`),
+    d.source === 'assumed' ? 'Talentos ausentes no log: presumido que o jogador tinha.' : '',
+    d.cooldownUncertain ? 'Usado mais vezes do que o CD permite: há redução de CD não modelada, o estado pode estar errado.' : '',
+  ].filter(Boolean).join('\n');
+
+  return (
+    <div title={details} className={`flex items-center justify-between p-2.5 rounded border text-sm shadow-sm ${statusBox(d.status)}`}>
+      <div className="flex items-center gap-2.5 min-w-0">
+        <SpellIcon spellId={d.spell.id} icon={d.spell.icon} size="md" grayscale={d.status === 'ON_COOLDOWN'} onMouseEnter={tooltip.onMouseEnter} onMouseLeave={tooltip.onMouseLeave} />
+        <div className="flex flex-col min-w-0">
+          <span className="font-medium truncate">
+            {d.spell.name}
+            {d.source === 'assumed' && <span className="text-zinc-500" title="talento não confirmado">?</span>}
+          </span>
+          <span className="text-[10px] opacity-60 truncate">
+            {d.replaces && <>substitui {d.replaces} · </>}
+            {CATEGORY_LABEL[d.category] && <>{CATEGORY_LABEL[d.category]} · </>}
+            {d.charges > 1 ? `${d.chargesLeft}/${d.charges} cargas` : `CD ${formatSeconds(d.cooldown)}`}
+            {d.appliedMods.length > 0 && ' · talentos'}
+            {d.cooldownUncertain && ' · CD incerto'}
+          </span>
+        </div>
+      </div>
+      <div className="font-bold text-xs pl-2 text-right shrink-0">
+        <StatusLabel status={d.status} readyIn={d.readyIn} />
+      </div>
+    </div>
+  );
+}
+
+function Stars({ quality, max }: { quality: number; max: number }) {
+  return (
+    <span className="text-amber-400 tracking-tighter" aria-label={`qualidade ${quality} de ${max}`}>
+      {'★'.repeat(quality)}<span className="text-zinc-600">{'★'.repeat(Math.max(0, max - quality))}</span>
+    </span>
+  );
+}
+
+function ConsumableCard({ c, tooltip }: { c: ConsumableAtDeath; tooltip: TooltipHandlers }) {
+  const last = c.uses[c.uses.length - 1];
+  const qualityNote = !last ? '' : last.reduced
+    ? 'Cura muito reduzida (debuff): não dá para saber a qualidade.'
+    : last.approximate
+      ? `Curou ${last.rawHeal.toLocaleString()} com bônus de cura: uma qualidade menor com bônus pode chegar a esse valor, então a estrela é estimada.`
+      : last.quality ? `Curou ${last.rawHeal.toLocaleString()}.` : '';
+  return (
+    <div title={qualityNote} className={`flex items-center justify-between p-2.5 rounded border text-sm shadow-sm ${statusBox(c.status)}`}>
+      <div className="flex items-center gap-2.5 min-w-0">
+        <SpellIcon spellId={c.spell.id} icon={c.spell.icon} size="md" grayscale={c.status === 'ON_COOLDOWN'} onMouseEnter={tooltip.onMouseEnter} onMouseLeave={tooltip.onMouseLeave} />
+        <div className="flex flex-col min-w-0">
+          <span className="font-medium truncate">{c.spell.name}</span>
+          <span className="text-[10px] opacity-70 truncate">
+            {!last && 'não usado'}
+            {last && <>usado {c.uses.length}x</>}
+            {last?.quality && last.maxQuality && <> · <Stars quality={last.quality} max={last.maxQuality} />{last.approximate && ' (estimado)'}</>}
+            {last?.reduced && ' · qualidade ?'}
+          </span>
+        </div>
+      </div>
+      <div className="font-bold text-xs pl-2 text-right shrink-0">
+        <StatusLabel status={c.status} readyIn={c.readyIn} />
+      </div>
+    </div>
+  );
+}
+
 export function DeathLog() {
   const [url, setUrl] = useState('');
   const [report, setReport] = useState({ code: '', fightId: 0 });
@@ -106,7 +216,7 @@ export function DeathLog() {
   const [analyzingId, setAnalyzingId] = useState<number | null>(null);
   const [resultOwnerId, setResultOwnerId] = useState<number | null>(null);
   
-  const [defensiveResult, setDefensiveResult] = useState<DefensiveAnalysis>({ classDefensives: [], consumables: [] });
+  const [defensiveResult, setDefensiveResult] = useState<DefensiveAnalysis>(EMPTY_ANALYSIS);
   const [timelineResult, setTimelineResult] = useState<TimelineEvent[]>([]);
   
   const [timerInput, setTimerInput] = useState('');
@@ -119,7 +229,18 @@ export function DeathLog() {
   const { tooltip, showTooltip, hideTooltip } = useSpellTooltip();
 
   const [getDeaths, { data: deathData, loading: loadingDeaths }] = useLazyQuery<DeathsQueryData>(GET_DEATHS);
-  const [getCasts] = useLazyQuery<CastsQueryData>(GET_PLAYER_CASTS);
+  const [getDefensiveContext] = useLazyQuery<DefensiveContextData>(GET_PLAYER_DEFENSIVE_CONTEXT);
+
+  /** Casts, talentos e curas de consumível de um jogador na luta atual. */
+  const loadPlayerContext = async (playerId: number) => {
+    const { data } = await getDefensiveContext({
+      variables: { code: report.code, fightId: report.fightId, playerId, healFilter: HEAL_FILTER },
+    });
+    const rep = data?.reportData?.report;
+    const casts = (rep?.casts?.data ?? []).filter((c) => !c.type || c.type === 'cast');
+    const combatant = rep?.combatantInfo?.data?.[0];
+    return { casts, combatant, heals: rep?.consumableHeals?.data ?? [] };
+  };
   const [getTimeline] = useLazyQuery<TimelineQueryData>(GET_DEATH_TIMELINE);
 
   useEffect(() => {
@@ -182,11 +303,9 @@ export function DeathLog() {
   const getAbilityIdsForType = (type: string): number[] => {
     switch (type) {
       case 'health-pot':
-        return [431932, 431914];
+        return POTION_IDS;
       case 'warlock-stone':
-        return [6262];
-      case 'defensives':
-        return [];
+        return HEALTHSTONE_IDS;
       default:
         return [];
     }
@@ -217,15 +336,12 @@ export function DeathLog() {
       const results: TimerValidationResult[] = [];
 
       for (const player of players) {
-        const { data: castDataRaw } = await getCasts({ 
-          variables: { code: report.code, fightId: report.fightId, playerId: player.id } 
-        });
-        const castData = (castDataRaw || {}) as { reportData?: any };
-        const casts: CastEvent[] = castData?.reportData?.report?.events?.data || [];
+        const { casts, combatant } = await loadPlayerContext(player.id);
 
         const className = player.type;
         const iconParts = player.icon.split('-');
         const specName = iconParts.length > 1 ? iconParts[1] : className;
+        const specId = combatant?.specID ?? getSpecId(className, specName);
         const playerDeathTime = player.timestamp;
 
         const playerResult: TimerValidationResult = {
@@ -243,24 +359,21 @@ export function DeathLog() {
           const diedInWindow = playerDeathTime && Math.abs(playerDeathTime - targetTimestamp) <= TIMER_TOLERANCE;
           
           if (timer.type === 'defensives') {
-            const classSpecs = DEFENSIVE_SPELLS[className];
-            const defensiveSpells = classSpecs?.[specName] || [];
-            const defensiveIds = defensiveSpells.map(spell => spell.id);
-            
-            const matchingCast = casts.find(c => 
+            // Inclui todas as variantes por talento (ex.: Ice Cold conta como Ice Block).
+            const defensiveIds = defensiveCastIds(className, specId);
+
+            const matchingCast = casts.find(c =>
               defensiveIds.includes(c.abilityGameID) &&
               Math.abs(c.timestamp - targetTimestamp) <= TIMER_TOLERANCE
             );
-            
-            const spell = defensiveSpells.find(s => s.id === matchingCast?.abilityGameID);
-            
+
             playerResult.timers.push({
               time: timer.time,
               type: timer.type,
               used: !!matchingCast,
               actualCast: matchingCast ? {
                 timestamp: matchingCast.timestamp,
-                abilityName: spell?.name || `Spell ${matchingCast.abilityGameID}`
+                abilityName: spellName(matchingCast.abilityGameID) || `Spell ${matchingCast.abilityGameID}`
               } : undefined,
               diedInWindow: diedInWindow,
               deathTime: diedInWindow ? playerDeathTime : undefined
@@ -277,9 +390,7 @@ export function DeathLog() {
               used: !!matchingCast,
               actualCast: matchingCast ? {
                 timestamp: matchingCast.timestamp,
-                abilityName: timer.type === 'health-pot' ? 'Health Potion' : 
-                            timer.type === 'warlock-stone' ? 'Healthstone' : 
-                            `Spell ${matchingCast.abilityGameID}`
+                abilityName: spellName(matchingCast.abilityGameID) || `Spell ${matchingCast.abilityGameID}`
               } : undefined,
               diedInWindow: diedInWindow,
               deathTime: diedInWindow ? playerDeathTime : undefined
@@ -324,7 +435,7 @@ export function DeathLog() {
     if (isLive && !report.fightId) return alert("Por favor, selecione uma luta na lista abaixo.");
 
     getDeaths({ variables: { code: report.code, fightId: report.fightId } });
-    setDefensiveResult({ classDefensives: [], consumables: [] });
+    setDefensiveResult(EMPTY_ANALYSIS);
     setTimelineResult([]);
     setResultOwnerId(null);
   };
@@ -332,7 +443,7 @@ export function DeathLog() {
   const handleLiveFightSelect = (fightId: number) => {
     setReport(prev => ({ ...prev, fightId }));
     getDeaths({ variables: { code: report.code, fightId } });
-    setDefensiveResult({ classDefensives: [], consumables: [] });
+    setDefensiveResult(EMPTY_ANALYSIS);
     setTimelineResult([]);
     setResultOwnerId(null);
   };
@@ -340,58 +451,23 @@ export function DeathLog() {
   const investigateDeath = async (player: DeathEntry) => {
     setAnalyzingId(player.id);
     setResultOwnerId(null);
-    setDefensiveResult({ classDefensives: [], consumables: [] });
+    setDefensiveResult(EMPTY_ANALYSIS);
     setTimelineResult([]);
 
-    const normalizeSpecName = (spec?: string, className?: string): string => {
-      if (!spec) return '';
-      
-      const classSpecs = DEFENSIVE_SPELLS[className || ''];
-      if (classSpecs && classSpecs[spec]) {
-        return spec;
-      }
-      
-      return spec
-        .replace(/([a-z])([A-Z])/g, '$1-$2')
-        .split(/[\s-_]+/)
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-        .join('');
-    };
-
-    const analyzeSpellStatus = (spell: DefensiveSpell, casts: CastEvent[], deathTimestamp: number) => {
-      const uses = casts.filter(c => c.abilityGameID === spell.id);
-      const castsBeforeDeath = uses.filter(c => c.timestamp < deathTimestamp);
-      const lastCast = castsBeforeDeath[castsBeforeDeath.length - 1];
-
-      let status: 'AVAILABLE' | 'ON_COOLDOWN' | 'ACTIVE' = 'AVAILABLE';
-      if (lastCast) {
-        const timeDiff = deathTimestamp - lastCast.timestamp; 
-        if (timeDiff <= (spell.duration * 1000)) status = 'ACTIVE';
-        else if (timeDiff < (spell.cooldown * 1000)) status = 'ON_COOLDOWN';
-      }
-      return { spell, status };
-    };
-
     const className = player.type;
-    const specName = normalizeSpecName(player.spec, className);
-    const classSpecs = DEFENSIVE_SPELLS[className];
-    const classDefensiveSpells = classSpecs?.[specName] || [];
-    const consumableSpells = DEFENSIVE_SPELLS["Consumables"]?.["All"] || [];
-
-    const { data: castDataRaw } = await getCasts({ 
-      variables: { code: report.code, fightId: report.fightId, playerId: player.id } 
-    });
-    const castData = (castDataRaw || {}) as { reportData?: any };
-    const casts: CastEvent[] = castData?.reportData?.report?.events?.data || [];
+    const { casts, combatant, heals } = await loadPlayerContext(player.id);
+    // specID do CombatantInfo é o mais confiável; o ícone ("Mage-Arcane") é o fallback.
+    const specId = combatant?.specID ?? getSpecId(className, player.spec);
+    const talents = parseTalents(combatant);
     const deathTimestampAbs = player.timestamp;
+    const castsBeforeDeath = casts.filter((c) => c.timestamp < deathTimestampAbs);
 
-    const classDefensiveResults = classDefensiveSpells.map(spell => 
-      analyzeSpellStatus(spell, casts, deathTimestampAbs)
-    );
+    const categoryOrder = { personal: 0, external: 1, raid: 2 } as const;
+    const classDefensiveResults = resolveDefensives(className, specId, talents, castsBeforeDeath)
+      .map((d) => statusAt(d, castsBeforeDeath, deathTimestampAbs))
+      .sort((a, b) => categoryOrder[a.category] - categoryOrder[b.category]);
 
-    const consumableResults = consumableSpells.map(spell => 
-      analyzeSpellStatus(spell, casts, deathTimestampAbs)
-    );
+    const consumableResults = consumablesAt(castsBeforeDeath, heals, deathTimestampAbs);
 
     const fightStartTime = deathData?.reportData?.report?.fights?.[0]?.startTime || 0;
     const deathRelativeTime = player.timestamp - fightStartTime;
@@ -477,9 +553,10 @@ export function DeathLog() {
 
     formattedTimeline.sort((a, b) => a.timestamp - b.timestamp);
 
-    setDefensiveResult({ 
-      classDefensives: classDefensiveResults, 
-      consumables: consumableResults 
+    setDefensiveResult({
+      classDefensives: classDefensiveResults,
+      consumables: consumableResults,
+      talentsKnown: !!talents,
     });
     setTimelineResult(formattedTimeline);
     setResultOwnerId(player.id);
@@ -598,25 +675,8 @@ export function DeathLog() {
                                                 <ShieldAlert size={12}/> Consumíveis
                                             </div>
                                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                                                {defensiveResult.consumables.map((res, idx) => (
-                                                    <div key={idx} className={`flex items-center justify-between p-2.5 rounded border text-sm shadow-sm ${res.status === 'AVAILABLE' ? 'bg-red-500/10 border-red-500/30 text-red-200' : ''} ${res.status === 'ON_COOLDOWN' ? 'bg-zinc-800/50 border-zinc-700/50 text-zinc-500' : ''} ${res.status === 'ACTIVE' ? 'bg-green-500/10 border-green-500/30 text-green-200' : ''}`}>
-                                                        <div className="flex items-center gap-2.5">
-                                                            <SpellIcon 
-                                                                spellId={res.spell.id} 
-                                                                icon={res.spell.icon} 
-                                                                size="md" 
-                                                                grayscale={res.status === 'ON_COOLDOWN'}
-                                                                onMouseEnter={showTooltip}
-                                                                onMouseLeave={hideTooltip}
-                                                            />
-                                                            <span className="font-medium">{res.spell.name}</span>
-                                                        </div>
-                                                        <div className="font-bold text-xs pl-2">
-                                                            {res.status === 'AVAILABLE' && <span className="text-red-400">DISPONÍVEL</span>}
-                                                            {res.status === 'ACTIVE' && <span className="text-green-400">ATIVO</span>}
-                                                            {res.status === 'ON_COOLDOWN' && <span className="text-zinc-500">CD</span>}
-                                                        </div>
-                                                    </div>
+                                                {defensiveResult.consumables.map((res) => (
+                                                    <ConsumableCard key={res.key} c={res} tooltip={{ onMouseEnter: showTooltip, onMouseLeave: hideTooltip }} />
                                                 ))}
                                             </div>
                                          </div>
@@ -627,27 +687,13 @@ export function DeathLog() {
                                          <div className="space-y-2">
                                             <div className="text-xs font-bold text-blue-400 uppercase tracking-wider flex items-center gap-2">
                                                 <ShieldAlert size={12}/> Defensivos da Classe ({death.spec})
+                                                <span className="ml-auto normal-case tracking-normal font-normal text-[10px] text-zinc-600">
+                                                    {defensiveResult.talentsKnown ? 'baseado nos talentos do log' : 'log sem talentos: defensivos de talento presumidos'} · build {DEFENSIVES_BUILD}
+                                                </span>
                                             </div>
                                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                                                {defensiveResult.classDefensives.map((res, idx) => (
-                                                    <div key={idx} className={`flex items-center justify-between p-2.5 rounded border text-sm shadow-sm ${res.status === 'AVAILABLE' ? 'bg-red-500/10 border-red-500/30 text-red-200' : ''} ${res.status === 'ON_COOLDOWN' ? 'bg-zinc-800/50 border-zinc-700/50 text-zinc-500' : ''} ${res.status === 'ACTIVE' ? 'bg-green-500/10 border-green-500/30 text-green-200' : ''}`}>
-                                                        <div className="flex items-center gap-2.5">
-                                                            <SpellIcon 
-                                                                spellId={res.spell.id} 
-                                                                icon={res.spell.icon} 
-                                                                size="md" 
-                                                                grayscale={res.status === 'ON_COOLDOWN'}
-                                                                onMouseEnter={showTooltip}
-                                                                onMouseLeave={hideTooltip}
-                                                            />
-                                                            <span className="font-medium">{res.spell.name}</span>
-                                                        </div>
-                                                        <div className="font-bold text-xs pl-2">
-                                                            {res.status === 'AVAILABLE' && <span className="text-red-400">DISPONÍVEL</span>}
-                                                            {res.status === 'ACTIVE' && <span className="text-green-400">ATIVO</span>}
-                                                            {res.status === 'ON_COOLDOWN' && <span className="text-zinc-500">CD</span>}
-                                                        </div>
-                                                    </div>
+                                                {defensiveResult.classDefensives.map((res) => (
+                                                    <DefensiveCard key={res.key} d={res} tooltip={{ onMouseEnter: showTooltip, onMouseLeave: hideTooltip }} />
                                                 ))}
                                             </div>
                                          </div>
